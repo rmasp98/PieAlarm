@@ -1,0 +1,8 @@
+Different moduels needed
+  - Alarm   - syncing alarm, checking an alarm trigger (e.g. sound/light?), snooze, stop, set alarms
+  - Light   - controlling the light 
+  - Sensor  - reading sensor and signalling change of light level
+  - Sound   - loading and playing sounds upon trigger
+  - UI      - displaying interface and providing API to change interface
+  - Voice   - Voice recognition
+  - Weather - query weather APIs and put in nice format
