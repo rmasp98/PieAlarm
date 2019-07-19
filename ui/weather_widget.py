@@ -3,30 +3,31 @@ from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 
-icons = {"sunny":"ui/icons/sun.png"}
+icons = {"sunny":"ui/icons/sun.png", "none":"ui/icons/no_weather.png"}
+
 
 class WeatherWidget(QWidget):
     def __init__(self, parent=None):
         super(WeatherWidget, self).__init__(parent)
-        self.Set(22, "sunny")
-        self.layout = QVBoxLayout()
-        self.layout.setAlignment(Qt.AlignCenter)
+        # self.set(22, "sunny")
+        layout = QVBoxLayout()
+        layout.setAlignment(Qt.AlignCenter)
 
-    def Set(self, temp, weather):
-        temp = QLabel(str(temp))
+        pixmap = QPixmap(icons["none"])
+        icon = QLabel()
+        icon.setObjectName("icon")
+        icon.setAlignment(Qt.AlignCenter)
+        icon.setPixmap(pixmap.scaledToWidth(100))
+        layout.addWidget(icon)
+
+        temp = QLabel("0")
+        temp.setObjectName("temperature")
         temp.setAlignment(Qt.AlignCenter)
-        # temp.setStyleSheet("border: 1px inset grey")
+        layout.addWidget(temp)
 
+        self.setLayout(layout)
+
+    def set(self, temp, weather):
         pixmap = QPixmap(icons[weather])
-        image = QLabel()
-        image.setPixmap(pixmap.scaledToWidth(100))
-        image.setAlignment(Qt.AlignCenter)
-        # image.setStyleSheet("border: 1px inset grey")
-
-        # layout = QVBoxLayout()
-        # layout.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(image)
-        self.layout.addWidget(temp)
-
-        # self.setLayout(layout)
-        
+        self.findChild(QLabel, "icon").setPixmap(pixmap.scaledToWidth(100))
+        self.findChild(QLabel, "temperature").setText(str(temp))

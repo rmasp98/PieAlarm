@@ -6,3 +6,32 @@ Different moduels needed
   - UI      - displaying interface and providing API to change interface
   - Voice   - Voice recognition
   - Weather - query weather APIs and put in nice format
+
+
+
+TODO:
+  - Weather pulled down from various sites
+  - Changeable background image
+  - Dark theme
+  - Light sensor to switch to dark theme at night after small timeout
+  - Alarm sounds
+    - Play music from plex server
+    - Play from default style alarm sounds
+    - Play playlist from spotify/amazon/etc,
+    - Play internet radio station
+  - Alarm sync
+    - use bluetooth to sync alarm times from my phone
+    - when connected disable alarms on phone
+  - Alarm challenges
+    - To snooze you need to solve a challenge
+    - Challenges increase in difficultly more times you snooze starting at easy
+  - Light that could be triggered by alarm and voice
+  - Voice controls
+    - say "Time" to read out time
+    - say "Weather" to give overview of todays weather
+    - say "Snooze" to snooze alarm
+    - say "Light on/off" to switch light on/off
+  - Subscreens that allow further configuration/interface of application
+    - Obviously we will need a settings screen
+    - Weather screen to elaborate on weather
+    - Alarms screen to view and configure alarms

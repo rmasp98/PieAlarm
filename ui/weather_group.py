@@ -6,14 +6,21 @@ from ui.weather_widget import WeatherWidget
 class WeatherGroup(QWidget):
     def __init__(self, parent=None):
         super(WeatherGroup, self).__init__(parent)
-        self.weather_units = [WeatherWidget() for i in range(5)]
-        self.UpdateGroup([(21, "sunny") for i in range(5)])
 
-
-    def UpdateGroup(self, updates):
         layout = QHBoxLayout()
-        for weather, update in zip(self.weather_units, updates):
-            weather.Set(update[0], update[1])
-            layout.addWidget(weather)
+        for i in range(5):
+            layout.addWidget(WeatherWidget())
 
         self.setLayout(layout)
+
+    def update_group(self, updates):
+        for weather, update in zip(self.findChildren(WeatherWidget), updates):
+            weather.set(update[0], update[1])
+
+    def hide_weather(self):
+        for weather in self.findChildren(WeatherWidget):
+            weather.hide()
+
+    def show_weather(self):
+        for weather in self.findChildren(WeatherWidget):
+            weather.show()
