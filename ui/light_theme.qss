@@ -1,0 +1,19 @@
+QMainWindow[darkTheme=false] {
+  border-image: url(ui/icons/landscape.jpg)
+} 
+
+QMainWindow[darkTheme=true] {
+  background-color: black
+} 
+
+QLabel {
+  color: white;
+  font: "square_sans_serif_7";
+  text-align: center center;
+  qproperty-alignment: 'AlignCenter | AlignCenter';
+  border: 1px inset grey
+}
+
+DigitalClock {
+  font-size: 150px;
+}
