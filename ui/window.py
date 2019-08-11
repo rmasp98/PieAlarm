@@ -1,8 +1,9 @@
 
-from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel
+from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout
 from PyQt5.QtCore    import Qt
 from ui.clock import DigitalClock
 from ui.weather import WeatherGroup
+from ui.alarm import NextAlarm
 
 
 class Window(QMainWindow):
@@ -22,7 +23,7 @@ class Window(QMainWindow):
         vert_layout = QVBoxLayout(main_widget)
         vert_layout.addWidget(WeatherGroup())
         vert_layout.addWidget(DigitalClock())
-        vert_layout.addWidget(QLabel("Next Alarm:\n06:30"))
+        vert_layout.addWidget(NextAlarm())
 
     def update_weather(self, updates):
         self.findChild(WeatherGroup).update_all(updates)
