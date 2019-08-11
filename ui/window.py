@@ -1,5 +1,6 @@
 
 from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel
+from PyQt5.QtCore    import Qt
 from ui.clock import DigitalClock
 from ui.weather import WeatherGroup
 
@@ -11,7 +12,8 @@ class Window(QMainWindow):
         # self.showFullScreen()
         self.setup_screen()
         self.setProperty("darkTheme", False)
-        self.setStyleSheet(open("ui/light_theme.qss").read())
+        self.setStyleSheet(open("ui/theme.qss").read())
+        self.setCursor(Qt.BlankCursor)
 
     def setup_screen(self):
         main_widget = QWidget()

@@ -29,11 +29,11 @@ class WeatherWidget(QWidget):
 
 
 class WeatherGroup(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, num_widgets=5, parent=None):
         super(WeatherGroup, self).__init__(parent)
 
         layout = QHBoxLayout()
-        for _ in range(5):
+        for _ in range(num_widgets):
             layout.addWidget(WeatherWidget())
         self.setLayout(layout)
 
@@ -47,3 +47,6 @@ class WeatherGroup(QWidget):
                 weather.show()
             else:
                 weather.hide()
+
+    # def num_widgets(self):
+    #     return self.ch

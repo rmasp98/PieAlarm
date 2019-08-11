@@ -1,36 +1,52 @@
-from datetime import time, datetime
 
-Weekdays = {
-    "Monday"    :0,
-    "Tuesday"   :1,
-    "Wednesday" :2,
-    "Thursday"  :3,
-    "Friday"    :4,
-    "Saturday"  :5,
-    "Sunday"    :6
-}
+import datetime
 
 class Alarm:
-    def __init__(self):
-        self.time = time(0, 0)
-        self.days = set()
-        self.trigger = "What will happen at alarm"
+    Weekdays = [
+        "Monday", "Tuesday", "Wednesday", "Thursday",\
+        "Friday", "Saturday", "Sunday"
+    ]
 
-    def set_time(self, hour, minute):
-        self.time = time(hour, minute)
+    def __init__(self, hour, minute, days, repeat, playback):
+        self._time = datetime.time(hour, minute)
+        self._repeat = bool(repeat)
+        self._playback = playback
+        if not days:
+            raise ValueError("You have not assigned any days")
+        self._days = set()
+        for day in days:
+            self._days.add(self._check_day_is_valid(day))
 
-    def add_day(self, day):
-        self.days.add(Weekdays[day])
+    def get_time(self):
+        return self._time
 
-    def remove_day(self, day):
-        self.days.discard(Weekdays[day])
+    def is_day_active(self, day):
+        return day in self._days
 
-    # def find_next_day(self):
-    #     today = datetime.now().weekday()
-    #     for i in range(8):
-    #         if (today + i) % 7 in self.days:
-    #             if (i == 0) and (datetime.now().time() < self.time):
-    #                 return 0
-    #             elif i != 0:
-    #                 return i
-    #     return -1
+    def is_repeating(self):
+        return self._repeat
+
+    def get_playback(self):
+        return self._playback
+
+    def find_next_alarm(self):
+        delta_days = self._find_days_till_next_alarm()
+        alarm_time = datetime.datetime.now() + datetime.timedelta(days=delta_days)
+        alarm_time = alarm_time.replace(hour=self._time.hour, \
+            minute=self._time.minute, second=0)
+        return alarm_time
+
+    def _check_day_is_valid(self, day):
+        if day in self.Weekdays:
+            return day
+        raise ValueError(str(day) + " is not an accepted day")
+
+    def _find_days_till_next_alarm(self):
+        now = datetime.datetime.now()
+        for day_offset in range(8):
+            if self.Weekdays[(now.weekday() + day_offset) % 7] in self._days:
+                if day_offset != 0:
+                    return day_offset
+                elif now.time() < self._time:
+                    return 0
+        raise ValueError("Someone has broken the constructor!!!")
