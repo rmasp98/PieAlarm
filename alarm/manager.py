@@ -1,26 +1,45 @@
 
-import alarm
+import datetime
 
+import alarm.scheduler
+import sound.player
 
 class Manager:
 
-    def __init__(self, scheduler=alarm.scheduler.Scheduler()):
+    def __init__(self, new_scheduler=alarm.scheduler.Scheduler(),\
+                       new_player=sound.player.Player()):
         self._alarms = {}
-        self._scheduler = scheduler
+        self._scheduler = new_scheduler
+        self._player = new_player
+        self._snoozed = False
 
     def get_alarms(self):
         return dict(self._alarms)
 
     def create_alarm(self, name, new_alarm):
         self._alarms[name] = new_alarm
+        self._scheduler.add_job(name, new_alarm.find_next_alarm(),\
+            self._create_callback(name, new_alarm))
 
     def remove_alarm(self, name):
         self._alarms.pop(name, None)
+        self._scheduler.remove_job(name)
 
+    def get_next_alarm_time(self):
+        return self._scheduler.get_next_job_time()
 
-    # def __init__(self, scheduler=alarm.scheduler.Scheduler):
-    #     self._scheduler = scheduler
+    def snooze(self):
+        self._snoozed = True
+        self._player.stop()
 
-    # def create_alarm(self, name, new_alarm):
-    #     new_job = alarm.job.Job(name, new_alarm.find_next_alarm(), None)
-    #     self._scheduler.add_job(name, new_job)
+    def _create_callback(self, name, callback_alarm):
+        def callback():
+            success = self._player.play(callback_alarm.get_playback())
+            if success and self._snoozed:
+                self._scheduler.add_job(name,\
+                    datetime.datetime.now() + datetime.timedelta(minutes=10),\
+                    self._create_callback(name, callback_alarm))
+                return
+            self._scheduler.add_job(name, callback_alarm.find_next_alarm(),\
+                self._create_callback(name, callback_alarm))
+        return callback

@@ -31,7 +31,7 @@ class JobTest(unittest.TestCase):
             alarm_time = patched.now() + datetime.timedelta(seconds=10)
             job = create_job(dt=alarm_time, callback=mock.Mock())
             job.start()
-            time.sleep(0.01) # Bodge because it takes time to start a thread
+            time.sleep(0.02) # Bodge because it takes time to start a thread
             mock_method.assert_called_with(10.0)
 
     def test_exits_without_calling_callback_on_kill(self):
