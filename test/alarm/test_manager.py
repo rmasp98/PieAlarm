@@ -28,7 +28,7 @@ class ManagerTest(unittest.TestCase):
         self.manager.create_alarm("test", self.alarm)
         self.scheduler.add_job.assert_called_once()
 
-    def test_remove_alarm_remove_job_from_schedule(self):
+    def test_remove_alarm_remove_job_from_scheduler(self):
         self.manager.create_alarm("test", self.alarm)
         self.manager.remove_alarm("test")
         self.scheduler.remove_job.assert_called_once_with("test")
@@ -39,6 +39,10 @@ class ManagerTest(unittest.TestCase):
 
     def test_snooze_stops_current_playback(self):
         self.manager.snooze()
+        self.player.stop.assert_called_once()
+
+    def test_stop_stops_current_playback(self):
+        self.manager.stop()
         self.player.stop.assert_called_once()
 
     def test_create_alarm_creates_callback(self):

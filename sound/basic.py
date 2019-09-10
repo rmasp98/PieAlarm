@@ -1,8 +1,7 @@
-from threading import Thread
 import wave
 import pyaudio
 
-class BasicSound:
+class Basic:
     def __init__(self, file):
         self._track = wave.open(file)
         self._pause = False
@@ -16,11 +15,6 @@ class BasicSound:
         self._stream.stop_stream()
         self._stream.close()
         self._track.close()
-
-    def async_play(self):
-        thread = Thread(target=self.play)
-        thread.start()
-
 
     def play(self, chunk=1024):
         self._pause = False

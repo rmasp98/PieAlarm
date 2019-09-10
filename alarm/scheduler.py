@@ -22,6 +22,9 @@ class Scheduler:
         self._jobs = {}
         job.Job.complete = self.remove_job
 
+    def __del__(self):
+        self._remove_all_jobs()
+
     def get_next_job_time(self):
         return self._time
 
@@ -49,3 +52,8 @@ class Scheduler:
                 next_time = update_job.get_time()
 
         self._time = next_time
+
+    def _remove_all_jobs(self):
+        jobs = list(self._jobs.keys())
+        for remove_job in jobs:
+            self.remove_job(remove_job)

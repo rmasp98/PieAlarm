@@ -37,6 +37,8 @@ class Job:
     def _execute(self):
         time_till_alarm = self._time.timestamp() - datetime.datetime.now().timestamp()
         if not self._event.wait(time_till_alarm):
+            if callable(Job.complete):
+                Job.complete(self._name)
             self._callback()
-        if callable(Job.complete):
+        elif callable(Job.complete):
             Job.complete(self._name)

@@ -3,6 +3,7 @@ import unittest
 import datetime
 # import time
 import mock
+import time
 
 from alarm.scheduler import Scheduler
 
@@ -43,6 +44,13 @@ class SchedulerTest(unittest.TestCase):
             self.scheduler.add_job("remove_job", self.time, self.callback)
             self.scheduler.remove_job("remove_job")
             kill_method.assert_called_once()
+
+    def test_destroy_scheduler_kills_all_jobs(self):
+        with mock.patch("alarm.job.Job.kill") as kill_method:
+            for i in range(5):
+                self.scheduler.add_job("remove_job" + str(i), self.time, self.callback)
+            self.scheduler.__del__()
+            self.assertEqual(kill_method.call_count, 5)
 
     # Prevent the kill method trying to join a thread that is not there
     @mock.patch("alarm.job.Job.kill", mock.Mock())

@@ -3,6 +3,7 @@ import datetime
 
 import alarm.scheduler
 import sound.player
+import ui.controller
 
 class Manager:
 
@@ -32,13 +33,18 @@ class Manager:
         self._snoozed = True
         self._player.stop()
 
+    def stop(self):
+        self._player.stop()
+
     def _create_callback(self, name, callback_alarm):
         def callback():
+            ui.controller.UiController().screen_signal.emit("snooze")
             success = self._player.play(callback_alarm.get_playback())
             if success and self._snoozed:
                 self._scheduler.add_job(name,\
-                    datetime.datetime.now() + datetime.timedelta(minutes=10),\
+                    datetime.datetime.now() + datetime.timedelta(minutes=1),\
                     self._create_callback(name, callback_alarm))
+                self._snoozed = False
                 return
             self._scheduler.add_job(name, callback_alarm.find_next_alarm(),\
                 self._create_callback(name, callback_alarm))

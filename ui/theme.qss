@@ -1,8 +1,8 @@
-QMainWindow[darkTheme=false] {
+QMainWindow[theme=default] {
   border-image: url(ui/icons/landscape.jpg)
 } 
 
-QMainWindow[darkTheme=true] {
+QMainWindow[theme=dark] {
   background-color: black
 } 
 
@@ -13,10 +13,36 @@ QLabel {
   qproperty-alignment: 'AlignCenter | AlignCenter';
 }
 
+/* Make Scrollbar area transparent */
+QScrollArea { background: transparent }
+QScrollArea > QWidget > QWidget { background: transparent }
+QScrollArea > QWidget > QScrollBar { background: palette(base); }
+
 DigitalClock {
   font-size: 150px;
 }
 
+AlarmWidget {
+  background-color: red
+}
+
 NextAlarm {
   font-size: 35px;
+}
+
+DayWidget[active=true] {
+  font-size: 15px;
+}
+
+DayWidget[active=false] {
+  font-size: 15px;
+  color: gray;
+}
+
+TimeWidget {
+  font-size:125px;
+}
+
+TimeWidget[alarm_active=false] {
+  color: gray
 }
