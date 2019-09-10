@@ -6,6 +6,11 @@ QMainWindow[theme=dark] {
   background-color: black
 } 
 
+QToolBar {
+  background: transparent;
+  border: transparent;
+}
+
 QLabel {
   color: white;
   font: "square_sans_serif_7";

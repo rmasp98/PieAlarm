@@ -36,9 +36,10 @@ class Manager:
     def stop(self):
         self._player.stop()
 
+    #TODO need to update alarm on main screen when creating new job
     def _create_callback(self, name, callback_alarm):
         def callback():
-            ui.controller.UiController().screen_signal.emit("snooze")
+            ui.controller.UiController().set_screen("snooze")
             success = self._player.play(callback_alarm.get_playback())
             if success and self._snoozed:
                 self._scheduler.add_job(name,\

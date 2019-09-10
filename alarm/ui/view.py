@@ -14,10 +14,11 @@ class ViewScreen(QWidget):
         grid.setLayout(grid_layout)
 
         i = 0
-        # TODO: Need to add name to alarm widget
         for name, alarm in alarm_manager.get_alarms().items():             
             grid_layout.addWidget(AlarmWidget(name, alarm, True), i/2, i % 2)
             i = i + 1
+
+        #TODO need to add a "add alarm" widget
 
         scroll = QScrollArea(self)
         scroll.setWidget(grid)

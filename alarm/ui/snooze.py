@@ -21,13 +21,13 @@ class SnoozeScreen(QWidget):
         stop.mouseReleaseEvent = self._stop_event
         layout.addWidget(stop)
 
-    def _snooze_event(self, event):
+    def _snooze_event(self, _):
         self._alarm_manager.snooze()
-        ui.controller.UiController().screen_signal.emit("main")
+        ui.controller.UiController().set_screen("main")
 
-    def _stop_event(self, event):
+    def _stop_event(self, _):
         self._alarm_manager.stop()
-        ui.controller.UiController().screen_signal.emit("main")
+        ui.controller.UiController().set_screen("main")
 
 
 

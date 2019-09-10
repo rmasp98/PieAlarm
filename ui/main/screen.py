@@ -7,9 +7,9 @@ from ui.main.alarm import NextAlarm
 
 class Screen(QWidget):
 
-    def __init__(self, next_alarm, parent=None):
+    def __init__(self, alarm_manager, parent=None):
         super(Screen, self).__init__(parent)
-        self.setup_screen(next_alarm)
+        self.setup_screen(alarm_manager.get_next_alarm_time())
 
     def setup_screen(self, next_alarm):
         vert_layout = QVBoxLayout(self)

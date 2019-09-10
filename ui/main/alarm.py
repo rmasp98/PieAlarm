@@ -14,4 +14,4 @@ class NextAlarm(QLabel):
         self.setText("Next Alarm:\n" + "{:0>2d}:{:0>2d}".format(time.hour, time.minute))
 
 def _click_event(_):
-    ui.controller.UiController().screen_signal.emit("alarm_view")
+    ui.controller.UiController().set_screen("alarm_view")
