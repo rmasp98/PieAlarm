@@ -2,7 +2,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTimeEdit
 
 from alarm.alarm import Alarm
-from alarm.ui.widget import *
+from alarm.ui.alarmwidget import *
 
 
 class EditScreen(QWidget):

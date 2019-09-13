@@ -2,7 +2,7 @@
 from PyQt5.QtWidgets import QWidget, QGridLayout, QScrollArea, QScroller
 from PyQt5.QtCore import Qt
 
-from alarm.ui.widget import AlarmWidget
+from alarm.ui.alarmwidget import AlarmWidget
 
 class ViewScreen(QWidget):
     def __init__(self, alarm_manager, parent=None):

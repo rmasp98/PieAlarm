@@ -14,6 +14,7 @@ class Job:
     variable that will execute when job is killed or has completed
     """
 
+    # TODO: convert this into a signal
     complete = None
 
     def __init__(self, name, time, callback):
@@ -40,5 +41,3 @@ class Job:
             if callable(Job.complete):
                 Job.complete(self._name)
             self._callback()
-        elif callable(Job.complete):
-            Job.complete(self._name)

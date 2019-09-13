@@ -51,3 +51,7 @@ TimeWidget {
 TimeWidget[alarm_active=false] {
   color: gray
 }
+
+SnoozeWidget {
+  font-size: 150px
+}

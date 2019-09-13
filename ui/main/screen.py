@@ -2,7 +2,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from ui.main.clock import DigitalClock
 from ui.main.weather import WeatherGroup
-from ui.main.alarm import NextAlarm
+from alarm.ui.nextalarm import NextAlarm
 
 
 class Screen(QWidget):

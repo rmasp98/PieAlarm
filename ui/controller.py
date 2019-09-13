@@ -1,5 +1,5 @@
 
-
+import collections
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QFontDatabase
 import PyQt5.QtCore
@@ -21,28 +21,32 @@ class UiController():
             self._window = ui.window.Window()
             QFontDatabase.addApplicationFont("fonts/square_sans_serif_7.ttf")
             self._alarm_manager = alarm.manager.Manager()
-            self._screen_signal = Signal(self._set_screen)
-            self._screen = screen
+            self._screen_signal = ScreenSignal(self._set_screen)
+            self._screen = ""
+            self._last_screen = collections.deque(maxlen=10)
 
+            # TODO: Remove when edit screen/database complete
             create_alarms(self._alarm_manager)
-            self.set_screen(screen)
+
+            self.set_screen(screen, False)
             self.set_theme(theme)
-            self._last_screen = ""            
+
 
         def set_theme(self, theme):
             self._window.set_theme(theme)
 
-        def set_screen(self, screen):
-            self._screen_signal.emit(screen)
+        def set_screen(self, screen, append_last_screen=True):
+            self._screen_signal.emit(screen, append_last_screen)
 
-        def _set_screen(self, screen):
+        def _set_screen(self, screen, append_back):
             if screen in screens:
-                self._last_screen = self._screen
+                if append_back:
+                    self._last_screen.append(self._screen)
                 self._screen = screen
                 self._window.set_central_widget(screens[screen](self._alarm_manager))
             elif screen == "back":
-                self._set_screen(self._last_screen)
-
+                if self._last_screen:
+                    self.set_screen(self._last_screen.pop(), False)
             # elif screen == "alarm_edit" and edit_alarm in self._alarm_manager.get_alarms():
             #     self._screen = screen
             #     self._window.setCentralWidget(AlarmEdit.EditScreen(\
@@ -53,7 +57,6 @@ class UiController():
             self._app.exec_()
             self._alarm_manager._scheduler._remove_all_jobs()
 
-    
 
     instance = None
 
@@ -65,14 +68,14 @@ class UiController():
         return getattr(self.instance, name)
 
 
-class Signal(PyQt5.QtCore.QObject):
-    _signal = PyQt5.QtCore.pyqtSignal(str)
+class ScreenSignal(PyQt5.QtCore.QObject):
+    _signal = PyQt5.QtCore.pyqtSignal(str, bool)
     def __init__(self, slot, parent=None):
-        super(Signal, self).__init__(parent)
+        super(ScreenSignal, self).__init__(parent)
         self._signal.connect(slot)
 
-    def emit(self, screen):
-        self._signal.emit(screen)
+    def emit(self, screen, append_back):
+        self._signal.emit(screen, append_back)
 
 screens = {
     "main": MainUI.Screen,
@@ -84,8 +87,8 @@ screens = {
 
 # Temporary until we get everything working
 def create_alarms(manager):
-    manager.create_alarm("Work", alarm.alarm.Alarm(6, 30, ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],\
+    # pass
+    manager.create_alarm("Work", alarm.alarm.Alarm(21, 10, ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],\
              True, {"type":"basic", "track":"song.wav"}))
     manager.create_alarm("Weekend", alarm.alarm.Alarm(7, 30, ["Saturday", "Sunday"],\
              True, {"type":"basic", "track":"song.wav"}))
-

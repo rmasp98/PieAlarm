@@ -33,10 +33,12 @@ class Window(QMainWindow):
         self._disable_weather()
 
     def _disable_weather(self):
-        if self._theme == "dark":
-            self.findChild(MainUI.Screen).show_weather(False)
-        else:
-            self.findChild(MainUI.Screen).show_weather(True)
+        main_screen = self.findChild(MainUI.Screen)
+        if main_screen is not None:
+            if self._theme == "dark":
+                main_screen.show_weather(False)
+            else:
+                main_screen.show_weather(True)
 
 
 class BackButton(QLabel):
