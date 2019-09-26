@@ -17,10 +17,10 @@ class Job:
     # TODO: convert this into a signal
     complete = None
 
-    def __init__(self, name, time, callback):
+    def __init__(self, uid, time, callback):
         """Should provide a time in the form of datetime and a callback
         function to be executed"""
-        self._name = name
+        self._uid = uid
         self._callback = callback
         self._time = time
         self._event = threading.Event()
@@ -39,5 +39,5 @@ class Job:
         time_till_alarm = self._time.timestamp() - datetime.datetime.now().timestamp()
         if not self._event.wait(time_till_alarm):
             if callable(Job.complete):
-                Job.complete(self._name)
+                Job.complete(self._uid)
             self._callback()

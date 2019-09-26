@@ -1,5 +1,6 @@
 
 import datetime
+import uuid
 
 from alarm import job
 
@@ -31,15 +32,17 @@ class Scheduler:
     def get_num_jobs(self):
         return len(self._jobs)
 
-    def add_job(self, name, time, callback):
-        new_job = job.Job(name, time, callback)
-        self.remove_job(name)
-        self._jobs[name] = new_job
+    def add_job(self, time, callback):
+        uid = str(uuid.uuid4())
+        new_job = job.Job(uid, time, callback)
+        # self.remove_job(name)
+        self._jobs[uid] = new_job
         self._update_next_job_time()
         new_job.start()
+        return uid
 
-    def remove_job(self, name):
-        removed_job = self._jobs.pop(name, None)
+    def remove_job(self, uid):
+        removed_job = self._jobs.pop(uid, None)
         if removed_job is not None:
             removed_job.kill()
             self._update_next_job_time()

@@ -2,7 +2,7 @@
 from PyQt5.QtWidgets import QWidget, QGridLayout, QScrollArea, QScroller
 from PyQt5.QtCore import Qt
 
-from alarm.ui.alarmwidget import AlarmWidget
+from alarm.ui.widgets import AlarmWidget, AddWidget
 
 class ViewScreen(QWidget):
     def __init__(self, alarm_manager, parent=None):
@@ -14,11 +14,10 @@ class ViewScreen(QWidget):
         grid.setLayout(grid_layout)
 
         i = 0
-        for name, alarm in alarm_manager.get_alarms().items():             
-            grid_layout.addWidget(AlarmWidget(name, alarm, True), i/2, i % 2)
+        for alarm in alarm_manager.get_alarms():
+            grid_layout.addWidget(AlarmWidget(alarm, True), i/2, i % 2)
             i = i + 1
-
-        #TODO need to add a "add alarm" widget
+        grid_layout.addWidget(AddWidget(), i/2, i % 2)
 
         scroll = QScrollArea(self)
         scroll.setWidget(grid)

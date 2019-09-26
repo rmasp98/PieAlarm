@@ -11,8 +11,8 @@ class Alarm:
         self._time = datetime.time(hour, minute)
         self._repeat = bool(repeat)
         self._playback = playback
-        if not days:
-            raise ValueError("You have not assigned any days")
+        # if not days:
+        #     raise ValueError("You have not assigned any days")
         self._days = set()
         for day in days:
             self._days.add(self._check_day_is_valid(day))

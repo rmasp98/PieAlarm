@@ -13,18 +13,17 @@ class Manager:
         self._scheduler = new_scheduler
         self._player = new_player
         self._snoozed = False
+        self._focused_alarm = None
 
     def get_alarms(self):
         return dict(self._alarms)
 
-    def create_alarm(self, name, new_alarm):
-        self._alarms[name] = new_alarm
-        self._scheduler.add_job(name, new_alarm.find_next_alarm(),\
-            self._create_callback(name, new_alarm))
+    def create_alarm(self, new_alarm):
+        self._alarms[new_alarm] = self._scheduler.add_job(
+            new_alarm.find_next_alarm(), self._create_callback(new_alarm))
 
-    def remove_alarm(self, name):
-        self._alarms.pop(name, None)
-        self._scheduler.remove_job(name)
+    def remove_alarm(self, remove_alarm):
+        self._scheduler.remove_job(self._alarms.pop(remove_alarm, None))
 
     def get_next_alarm_time(self):
         return self._scheduler.get_next_job_time()
@@ -36,17 +35,22 @@ class Manager:
     def stop(self):
         self._player.stop()
 
+    def set_focused_alarm(self, focused_alarm):
+        self._focused_alarm = focused_alarm
+
+    def get_focused_alarm(self):
+        return self._focused_alarm
+
     #TODO need to update alarm on main screen when creating new job
-    def _create_callback(self, name, callback_alarm):
+    def _create_callback(self, callback_alarm):
         def callback():
             ui.controller.UiController().set_screen("snooze")
             success = self._player.play(callback_alarm.get_playback())
             if success and self._snoozed:
-                self._scheduler.add_job(name,\
-                    datetime.datetime.now() + datetime.timedelta(minutes=1),\
-                    self._create_callback(name, callback_alarm))
+                new_time = datetime.datetime.now() + datetime.timedelta(minutes=1)
                 self._snoozed = False
-                return
-            self._scheduler.add_job(name, callback_alarm.find_next_alarm(),\
-                self._create_callback(name, callback_alarm))
+            else:
+                new_time = callback_alarm.find_next_alarm()
+
+            self._scheduler.add_job(new_time, self._create_callback(callback_alarm))
         return callback
