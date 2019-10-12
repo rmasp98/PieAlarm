@@ -22,6 +22,7 @@ class ViewScreen(QWidget):
         scroll = QScrollArea(self)
         scroll.setWidget(grid)
         scroll.setWidgetResizable(True)
+        # TODO: figure out how to fill window
         scroll.setFixedHeight(600)
         scroll.setFixedWidth(1024)
         scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)

@@ -12,7 +12,7 @@ class Manager:
         self._alarms = {}
         self._scheduler = new_scheduler
         self._player = new_player
-        self._snoozed = False
+        self._snoozed = True
         self._focused_alarm = None
 
     def get_alarms(self):
@@ -29,10 +29,10 @@ class Manager:
         return self._scheduler.get_next_job_time()
 
     def snooze(self):
-        self._snoozed = True
         self._player.stop()
 
     def stop(self):
+        self._snoozed = False
         self._player.stop()
 
     def set_focused_alarm(self, focused_alarm):
@@ -47,10 +47,11 @@ class Manager:
             ui.controller.UiController().set_screen("snooze")
             success = self._player.play(callback_alarm.get_playback())
             if success and self._snoozed:
-                new_time = datetime.datetime.now() + datetime.timedelta(minutes=1)
-                self._snoozed = False
+                new_time = datetime.datetime.now() + datetime.timedelta(minutes=10)
             else:
                 new_time = callback_alarm.find_next_alarm()
+                self._snoozed = True
 
             self._scheduler.add_job(new_time, self._create_callback(callback_alarm))
+            ui.controller.UiController().set_screen("back")
         return callback

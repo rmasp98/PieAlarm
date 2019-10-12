@@ -49,4 +49,4 @@ class Alarm:
                     return day_offset
                 elif now.time() < self._time:
                     return 0
-        raise ValueError("Someone has broken the constructor!!!")
+        raise ValueError("Someone has broken the constructor (potentially no days!!!")

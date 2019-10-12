@@ -27,7 +27,7 @@ class UiController():
             self._focus_alarm = None
 
             # TODO: Remove when edit screen/database complete
-            create_alarms(self._alarm_manager)
+            # create_alarms(self._alarm_manager)
 
             self.set_screen(screen, False)
             self.set_theme(theme)
@@ -85,9 +85,8 @@ screens = {
 
 
 # Temporary until we get everything working
-def create_alarms(manager):
-    # pass
-    manager.create_alarm(alarm.alarm.Alarm(21, 10, ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],\
-             True, {"type":"basic", "track":"song.wav"}))
-    manager.create_alarm(alarm.alarm.Alarm(7, 30, ["Saturday", "Sunday"],\
-             True, {"type":"basic", "track":"song.wav"}))
+# def create_alarms(manager):
+#     manager.create_alarm(alarm.alarm.Alarm(21, 10, ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],\
+#              True, {"type":"basic", "track":"song.wav"}))
+#     manager.create_alarm(alarm.alarm.Alarm(7, 30, ["Saturday", "Sunday"],\
+#              True, {"type":"basic", "track":"song.wav"}))

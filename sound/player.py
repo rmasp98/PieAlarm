@@ -13,10 +13,10 @@ class Player:
                 self._playing = True
                 self._player = sound.basic.Basic("sound/tracks/" + sound_data["track"])
                 self._player.play()
+                self._playing = False
                 return True
         return False
 
     def stop(self):
         if self._player is not None:
             self._player.stop()
-            self._playing = False

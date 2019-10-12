@@ -22,11 +22,9 @@ class SnoozeScreen(QWidget):
 
     def _snooze_event(self, _):
         self._alarm_manager.snooze()
-        ui.controller.UiController().set_screen("back")
 
     def _stop_event(self, _):
         self._alarm_manager.stop()
-        ui.controller.UiController().set_screen("back")
 
 
 class SnoozeWidget(QLabel):

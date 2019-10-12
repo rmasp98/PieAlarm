@@ -19,7 +19,7 @@ class Basic:
     def play(self, chunk=1024):
         self._pause = False
         data = self._track.readframes(chunk)
-        while not self._pause and data != '':
+        while not self._pause and data != b'':
             self._stream.write(data)
             data = self._track.readframes(chunk)
 

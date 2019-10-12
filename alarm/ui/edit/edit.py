@@ -1,5 +1,5 @@
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QCheckBox, QPushButton
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QCheckBox, QPushButton, QMessageBox
 
 from alarm.alarm import Alarm
 from alarm.ui.edit.time import TimeEdit
@@ -67,14 +67,17 @@ class EditScreen(QWidget):
         return button_widget
 
     def _save(self):
-        hour, minute = self._time_widget.get_time()
-        new_alarm = Alarm(
-            hour, minute, self._days_widget.get_active_days(), self._repeat.isChecked(),\
-            self._playback.get_playback()
-        )
-        self._alarm_manager.remove_alarm(self._alarm)
-        self._alarm_manager.create_alarm(new_alarm)
-        ui.controller.UiController().set_screen("back")
+        if self._days_widget.get_active_days():
+            hour, minute = self._time_widget.get_time()
+            new_alarm = Alarm(
+                hour, minute, self._days_widget.get_active_days(), self._repeat.isChecked(),\
+                self._playback.get_playback()
+            )
+            self._alarm_manager.remove_alarm(self._alarm)
+            self._alarm_manager.create_alarm(new_alarm)
+            ui.controller.UiController().set_screen("back")
+        else:
+            _day_message()
 
     def _cancel(self):
         ui.controller.UiController().set_screen("back")
@@ -82,3 +85,11 @@ class EditScreen(QWidget):
     def _delete(self):
         self._alarm_manager.remove_alarm(self._alarm)
         ui.controller.UiController().set_screen("back")
+
+
+def _day_message():
+    msg = QMessageBox()
+    msg.setIcon(QMessageBox.Warning)
+    msg.setText("Must select at least one day")
+    msg.setStandardButtons(QMessageBox.Ok)
+    msg.exec_()
