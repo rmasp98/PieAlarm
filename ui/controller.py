@@ -13,7 +13,7 @@ import alarm.ui.edit.edit as AlarmEdit
 import alarm.ui.snooze as AlarmSnooze
 
 class UiController():
-    
+
     class _UiController():
 
         def __init__(self, screen="main", theme="default"):
@@ -25,9 +25,6 @@ class UiController():
             self._screen = ""
             self._last_screen = collections.deque(maxlen=10)
             self._focus_alarm = None
-
-            # TODO: Remove when edit screen/database complete
-            # create_alarms(self._alarm_manager)
 
             self.set_screen(screen, False)
             self.set_theme(theme)
@@ -41,11 +38,15 @@ class UiController():
                 self._alarm_manager.set_focused_alarm(edit_alarm)
             self._screen_signal.emit(screen, append_last_screen)
 
+        def enable_toolbar_edit(self, enable, save_event, delete_event):
+            self._window.enable_toolbar_edit(enable, save_event, delete_event)
+
         def _set_screen(self, screen, append_back):
             if screen in screens:
+                self.enable_toolbar_edit(False, None, None)
                 if append_back:
                     self._last_screen.append(self._screen)
-                self._screen = screen                   
+                self._screen = screen
                 self._window.set_central_widget(screens[screen](self._alarm_manager))
             elif screen == "back":
                 if self._last_screen:
@@ -54,7 +55,7 @@ class UiController():
         def exec(self):
             self._window.show()
             self._app.exec_()
-            self._alarm_manager._scheduler._remove_all_jobs()
+            self._alarm_manager.__del__()
 
 
     instance = None
@@ -82,11 +83,3 @@ screens = {
     "alarm_view": AlarmView.ViewScreen,
     "snooze": AlarmSnooze.SnoozeScreen
 }
-
-
-# Temporary until we get everything working
-# def create_alarms(manager):
-#     manager.create_alarm(alarm.alarm.Alarm(21, 10, ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],\
-#              True, {"type":"basic", "track":"song.wav"}))
-#     manager.create_alarm(alarm.alarm.Alarm(7, 30, ["Saturday", "Sunday"],\
-#              True, {"type":"basic", "track":"song.wav"}))

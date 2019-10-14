@@ -1,10 +1,8 @@
 
-from PyQt5.QtWidgets import QMainWindow, QLabel, QToolBar
-from PyQt5.QtGui import QPixmap, QPalette
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMainWindow
 
 import ui.main.screen as MainUI
-import ui.controller
+import ui.toolbar
 
 class Window(QMainWindow):
 
@@ -17,10 +15,8 @@ class Window(QMainWindow):
         # self.setCursor(Qt.BlankCursor)
         self._theme = theme
 
-        toolbar = QToolBar()
-        toolbar.addWidget(BackButton())
-        toolbar.setMovable(False)
-        self.addToolBar(toolbar)
+        self._toolbar = ui.toolbar.ToolBar()
+        self.addToolBar(self._toolbar)
 
     def set_theme(self, theme):
         self.setProperty("theme", theme)
@@ -32,6 +28,9 @@ class Window(QMainWindow):
         self.setCentralWidget(widget)
         self._disable_weather()
 
+    def enable_toolbar_edit(self, enable, save_event, delete_event):
+        self._toolbar.enable_edit(enable, save_event, delete_event)
+
     def _disable_weather(self):
         main_screen = self.findChild(MainUI.Screen)
         if main_screen is not None:
@@ -39,15 +38,3 @@ class Window(QMainWindow):
                 main_screen.show_weather(False)
             else:
                 main_screen.show_weather(True)
-
-
-class BackButton(QLabel):
-
-    def __init__(self, parent=None):
-        super(BackButton, self).__init__(parent)
-        pixmap = QPixmap("ui/icons/back.png")
-        self.setPixmap(pixmap.scaledToWidth(50))
-        self.mouseReleaseEvent = _click_event
-
-def _click_event(_):
-    ui.controller.UiController().set_screen("back")

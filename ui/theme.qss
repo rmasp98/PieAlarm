@@ -24,7 +24,7 @@ QScrollArea > QWidget > QWidget { background: transparent }
 QScrollArea > QWidget > QScrollBar { background: palette(base); }
 
 DigitalClock {
-  font-size: 150px;
+  font-size: 200px;
 }
 
 AlarmWidget {
@@ -88,12 +88,26 @@ QCheckBox {
   color: white;
 }
 
-Spinner {
-  font-size: 100px;
-  font: "square_sans_serif_7";
-  color: orange;
+QCheckBox:indicator {
+  color:red
 }
 
 
 
+Spinner {
+  font-size: 200px;
+  font: "square_sans_serif_7";
+  color: orange;
+}
 
+QComboBox {
+  background: transparent;
+  selection-background-color: #f26d6d;
+  color: white;
+  selection-color: white;
+}
+
+QComboBox QAbstractItemView {
+  background: #000000;
+  border: none;
+}

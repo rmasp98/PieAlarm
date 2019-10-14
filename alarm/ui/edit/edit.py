@@ -45,28 +45,9 @@ class EditScreen(QWidget):
         self._playback = PlaybackWidget(self._alarm.get_playback())
         layout.addWidget(self._playback)
 
-        layout.addWidget(self._create_buttons())
+        ui.controller.UiController().enable_toolbar_edit(True, self._save, self._delete)
 
-    def _create_buttons(self):
-        button_widget = QWidget()
-        button_layout = QHBoxLayout()
-        button_widget.setLayout(button_layout)
-
-        save = QPushButton("Save")
-        save.clicked.connect(self._save)
-        button_layout.addWidget(save)
-
-        cancel = QPushButton("Cancel")
-        cancel.clicked.connect(self._cancel)
-        button_layout.addWidget(cancel)
-
-        delete = QPushButton("Delete")
-        delete.clicked.connect(self._delete)
-        button_layout.addWidget(delete)
-
-        return button_widget
-
-    def _save(self):
+    def _save(self, _):
         if self._days_widget.get_active_days():
             hour, minute = self._time_widget.get_time()
             new_alarm = Alarm(
@@ -82,7 +63,7 @@ class EditScreen(QWidget):
     def _cancel(self):
         ui.controller.UiController().set_screen("back")
 
-    def _delete(self):
+    def _delete(self, _):
         self._alarm_manager.remove_alarm(self._alarm)
         ui.controller.UiController().set_screen("back")
 

@@ -15,6 +15,9 @@ class Manager:
         self._snoozed = True
         self._focused_alarm = None
 
+    def __del__(self):
+        self._scheduler.__del__()
+
     def get_alarms(self):
         return dict(self._alarms)
 
@@ -41,7 +44,6 @@ class Manager:
     def get_focused_alarm(self):
         return self._focused_alarm
 
-    #TODO need to update alarm on main screen when creating new job
     def _create_callback(self, callback_alarm):
         def callback():
             ui.controller.UiController().set_screen("snooze")
