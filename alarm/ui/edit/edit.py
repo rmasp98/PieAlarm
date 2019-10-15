@@ -1,5 +1,5 @@
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QCheckBox, QPushButton, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QCheckBox, QMessageBox
 
 from alarm.alarm import Alarm
 from alarm.ui.edit.time import TimeEdit
@@ -25,17 +25,19 @@ class EditScreen(QWidget):
         self._time_widget = TimeEdit(self._alarm.get_time().hour, self._alarm.get_time().minute)
         h_layout.addWidget(self._time_widget)
 
-        self._active_switch = ToggleSwitch()
+        self._active_switch = ToggleSwitch(self._alarm.is_active())
         h_layout.addWidget(self._active_switch)
 
-        layout.addWidget(h_widget)
+        #TODO: bodge to get size right but still looks a bit shit
+        h_widget.setMinimumHeight(200)
+        layout.addWidget(h_widget, 2)
 
         h_widget2 = QWidget()
         h_layout2 = QHBoxLayout()
         h_widget2.setLayout(h_layout2)
 
         self._days_widget = DaysEdit(self._alarm)
-        h_layout2.addWidget(self._days_widget, 2)
+        h_layout2.addWidget(self._days_widget)
 
         self._repeat = QCheckBox("Repeat")
         self._repeat.setChecked(self._alarm.is_repeating())
@@ -52,16 +54,13 @@ class EditScreen(QWidget):
             hour, minute = self._time_widget.get_time()
             new_alarm = Alarm(
                 hour, minute, self._days_widget.get_active_days(), self._repeat.isChecked(),\
-                self._playback.get_playback()
+                self._playback.get_playback(), self._active_switch.is_active()
             )
             self._alarm_manager.remove_alarm(self._alarm)
             self._alarm_manager.create_alarm(new_alarm)
             ui.controller.UiController().set_screen("back")
         else:
             _day_message()
-
-    def _cancel(self):
-        ui.controller.UiController().set_screen("back")
 
     def _delete(self, _):
         self._alarm_manager.remove_alarm(self._alarm)

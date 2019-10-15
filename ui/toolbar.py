@@ -8,7 +8,7 @@ class ToolBar(QToolBar):
 
     def __init__(self, parent=None):
         super(ToolBar, self).__init__(parent)
-        self.setMaximumHeight(50)
+        self.setMaximumHeight(40)
 
         layout = QHBoxLayout()
         tb_widget = QWidget()

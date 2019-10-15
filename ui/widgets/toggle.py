@@ -16,6 +16,12 @@ class ToggleSwitch(QSlider):
         else:
             self.setValue(0)
 
+    def is_active(self):
+        if self.value() == 1:
+            return True
+        else:
+            return False
+
     def mouseReleaseEvent(self, _):
         if self.value() == 0:
             self._toggle(True)

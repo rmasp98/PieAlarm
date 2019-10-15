@@ -15,7 +15,7 @@ class ViewScreen(QWidget):
 
         i = 0
         for alarm in alarm_manager.get_alarms():
-            grid_layout.addWidget(AlarmWidget(alarm, True), i/2, i % 2)
+            grid_layout.addWidget(AlarmWidget(alarm, alarm.is_active()), i/2, i % 2)
             i = i + 1
         grid_layout.addWidget(AddWidget(), i/2, i % 2)
 
@@ -23,8 +23,8 @@ class ViewScreen(QWidget):
         scroll.setWidget(grid)
         scroll.setWidgetResizable(True)
         # TODO: figure out how to fill window
-        scroll.setFixedHeight(600)
-        scroll.setFixedWidth(1024)
+        scroll.setFixedHeight(480)
+        scroll.setFixedWidth(800)
         scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         QScroller.grabGesture(
             scroll.viewport(), QScroller.LeftMouseButtonGesture

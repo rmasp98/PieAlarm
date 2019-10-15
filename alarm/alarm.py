@@ -7,10 +7,11 @@ class Alarm:
         "Friday", "Saturday", "Sunday"
     ]
 
-    def __init__(self, hour, minute, days, repeat, playback):
+    def __init__(self, hour, minute, days, repeat, playback, active):
         self._time = datetime.time(hour, minute)
         self._repeat = bool(repeat)
         self._playback = playback
+        self._active = active
         self._days = set()
         for day in days:
             self._days.add(self._check_day_is_valid(day))
@@ -26,6 +27,9 @@ class Alarm:
 
     def get_playback(self):
         return self._playback
+
+    def is_active(self):
+        return self._active
 
     def find_next_alarm(self):
         delta_days = self._find_days_till_next_alarm()

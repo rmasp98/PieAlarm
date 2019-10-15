@@ -8,7 +8,7 @@ class Window(QMainWindow):
 
     def __init__(self, theme="default", parent=None):
         super(Window, self).__init__(parent)
-        self.setFixedSize(1024, 600)
+        self.setFixedSize(800, 480)
         # self.showFullScreen()
         self.setProperty("theme", "default")
         self.setStyleSheet(open("ui/theme.qss").read())

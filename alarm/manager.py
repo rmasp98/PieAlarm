@@ -22,8 +22,11 @@ class Manager:
         return dict(self._alarms)
 
     def create_alarm(self, new_alarm):
-        self._alarms[new_alarm] = self._scheduler.add_job(
-            new_alarm.find_next_alarm(), self._create_callback(new_alarm))
+        if new_alarm.is_active():
+            self._alarms[new_alarm] = self._scheduler.add_job(
+                new_alarm.find_next_alarm(), self._create_callback(new_alarm))
+        else:
+            self._alarms[new_alarm] = None
 
     def remove_alarm(self, remove_alarm):
         self._scheduler.remove_job(self._alarms.pop(remove_alarm, None))

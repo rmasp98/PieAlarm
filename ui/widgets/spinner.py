@@ -2,11 +2,9 @@
 import time
 import threading
 
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget, QSizePolicy
 from PyQt5.QtGui import QPainter
 from PyQt5.QtCore import QSize, QRect, Qt
-
-#TODO: make movement based on acceleration
 
 class Spinner(QWidget):
     def __init__(self, minimum=0, maximum=100, start=0, parent=None):
@@ -14,6 +12,7 @@ class Spinner(QWidget):
             raise ValueError("Minimum lager than maximum or start not beteen minimum and maximum")
 
         super(Spinner, self).__init__(parent)
+        self.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
         self._offset = 0
         self._spacing = 200
         self._drag_start = self._true_drag_start = 0
@@ -25,13 +24,14 @@ class Spinner(QWidget):
         self._mod = maximum - minimum
         self._min = minimum
 
-        self.setMinimumSize(300, 300)
-
     def get_value(self):
         return self._value
 
     def sizeHint(self):
-        return QSize(300, 300)
+        return QSize(250, 150)
+
+    def minimumSizeHint(self):
+        return QSize(250, 150)
 
     def mousePressEvent(self, e):
         self._timer = time.time()
@@ -53,12 +53,12 @@ class Spinner(QWidget):
         num_values = self._get_num_rendered_values()
 
         font_size = self.font().pixelSize()
-        centre = int(self.height()/2)-font_size
+        centre = int(self.height()/2)-font_size/2
         start_pos = centre - self._spacing * int(num_values/2)
 
         for i in range(num_values):
             rect = QRect(int(painter.device().width()/2)-(self.width()/2),\
-                start_pos + i*self._spacing + self._offset, self.width(), self.height())
+                start_pos + i*self._spacing + self._offset, self.width(), font_size)
             # TODO: format should be based on size of maximum and minimum
             painter.drawText(rect, Qt.AlignCenter,\
                 "{:0>2d}".format(self._get_bounded_value(self._value - int(num_values/2) + i)))

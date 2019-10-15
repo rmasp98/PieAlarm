@@ -51,5 +51,5 @@ class AddWidget(QLabel):
         self.mouseReleaseEvent = _click_event
 
 def _click_event(_):
-    new_alarm = Alarm(0, 0, [], False, None)
+    new_alarm = Alarm(0, 0, [], False, None, True)
     ui.controller.UiController().set_screen("alarm_edit", edit_alarm=new_alarm)
