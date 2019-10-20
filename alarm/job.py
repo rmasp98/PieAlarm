@@ -2,42 +2,44 @@
 import threading
 import datetime
 
+import utils.signal
 
 class Job:
     """Basic job to be scheduled
 
-    Expects a datetime for when the execution should occur and a
-    callback function to executed at datetime. If datetime is in the
-    past, callback will execute immediately
-
-    Can optionally add a complete callback using Job.complete class
-    variable that will execute when job is killed or has completed
+    Job will emit a signal at the specified time unless the job has been
+    killed. In order to receive the signal, subscribe using the class
+    function subscribe
     """
+    _complete = utils.signal.Signal()
 
-    # TODO: convert this into a signal
-    complete = None
+    @classmethod
+    def subscribe(cls, callback):
+        """Subscribe to all job success and failure events. Callback
+        should accept a uid (string) and success (bool) parameters"""
+        cls._complete.subscribe(callback)
 
-    def __init__(self, uid, time, callback):
-        """Should provide a time in the form of datetime and a callback
-        function to be executed"""
+    def __init__(self, uid, time):
+        """Provide a unique identifier (uid) and the time that the job
+        should trigger"""
         self._uid = uid
-        self._callback = callback
         self._time = time
         self._event = threading.Event()
         self._thread = threading.Thread(target=self._execute)
 
     def get_time(self):
+        """Returns datetime for when the job will execute"""
         return self._time
 
     def start(self):
+        """Starts a seperate thread to wait until execution of job.
+        If reaches time, emits job success signal"""
         self._thread.start()
 
     def kill(self):
+        """Kills job which emits a job failure signal"""
         self._event.set()
 
     def _execute(self):
         time_till_alarm = self._time.timestamp() - datetime.datetime.now().timestamp()
-        if not self._event.wait(time_till_alarm):
-            if callable(Job.complete):
-                Job.complete(self._uid)
-            self._callback()
+        Job._complete.notify(self._uid, not self._event.wait(time_till_alarm))

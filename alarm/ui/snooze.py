@@ -1,22 +1,23 @@
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
+import PyQt5.QtWidgets
 
-import ui.controller
+import utils.layout
 
-class SnoozeScreen(QWidget):
+class SnoozeScreen(PyQt5.QtWidgets.QWidget):
 
     def __init__(self, alarm_manager, parent=None):
         super(SnoozeScreen, self).__init__(parent)
         self._alarm_manager = alarm_manager
+        self._set_layout()
 
-        layout = QVBoxLayout()
-        self.setLayout(layout)
+    def _set_layout(self):
+        layout = utils.layout.create_vertical_layout(self)
 
         snooze = SnoozeWidget("Snooze")
         snooze.mouseReleaseEvent = self._snooze_event
         layout.addWidget(snooze)
 
-        stop = QLabel("Stop")
+        stop = PyQt5.QtWidgets.QLabel("Stop")
         stop.mouseReleaseEvent = self._stop_event
         layout.addWidget(stop)
 
@@ -27,15 +28,5 @@ class SnoozeScreen(QWidget):
         self._alarm_manager.stop()
 
 
-class SnoozeWidget(QLabel):
+class SnoozeWidget(PyQt5.QtWidgets.QLabel):
     pass
-
-
-
-#Need to display:
-# - time
-# - days
-# - repeat
-# - playback
-# - name
-# - active

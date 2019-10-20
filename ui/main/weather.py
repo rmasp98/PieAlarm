@@ -1,41 +1,39 @@
 
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QVBoxLayout
-from PyQt5.QtGui import QPixmap
+import PyQt5.QtWidgets
+import PyQt5.QtGui
 
+import utils.layout
 
 icons = {"sunny":"ui/icons/sun.png", "none":"ui/icons/no_weather.png"}
 
-
-class WeatherWidget(QWidget):
+class WeatherWidget(PyQt5.QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(WeatherWidget, self).__init__(parent)
-        layout = QVBoxLayout()
-        self.setLayout(layout)
+        layout = utils.layout.create_vertical_layout(self)
 
-        pixmap = QPixmap(icons["none"])
-        icon = QLabel()
+        pixmap = PyQt5.QtGui.QPixmap(icons["none"])
+        icon = PyQt5.QtWidgets.QLabel()
         icon.setObjectName("icon")
         icon.setPixmap(pixmap.scaledToWidth(100))
         layout.addWidget(icon)
 
-        temp = QLabel("0")
+        temp = PyQt5.QtWidgets.QLabel("0")
         temp.setObjectName("temperature")
         layout.addWidget(temp)
 
     def update(self, temperature, weather):
-        pixmap = QPixmap(icons[weather])
-        self.findChild(QLabel, "icon").setPixmap(pixmap.scaledToWidth(100))
-        self.findChild(QLabel, "temperature").setText(str(temperature))
+        pixmap = PyQt5.QtGui.QPixmap(icons[weather])
+        self.findChild(PyQt5.QtWidgets.QLabel, "icon").setPixmap(pixmap.scaledToWidth(100))
+        self.findChild(PyQt5.QtWidgets.QLabel, "temperature").setText(str(temperature))
 
 
-class WeatherGroup(QWidget):
+class WeatherGroup(PyQt5.QtWidgets.QWidget):
     def __init__(self, num_widgets=5, parent=None):
         super(WeatherGroup, self).__init__(parent)
 
-        layout = QHBoxLayout()
+        layout = utils.layout.create_horizontal_layout(self)
         for _ in range(num_widgets):
             layout.addWidget(WeatherWidget())
-        self.setLayout(layout)
 
     def update_all(self, updates):
         for weather, update in zip(self.findChildren(WeatherWidget), updates):
@@ -47,6 +45,3 @@ class WeatherGroup(QWidget):
                 weather.show()
             else:
                 weather.hide()
-
-    # def num_widgets(self):
-    #     return self.ch

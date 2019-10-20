@@ -9,7 +9,7 @@ import ui.main.screen as MainUI
 import alarm.manager
 import alarm.alarm
 import alarm.ui.view as AlarmView
-import alarm.ui.edit.edit as AlarmEdit
+import alarm.ui.edit as AlarmEdit
 import alarm.ui.snooze as AlarmSnooze
 
 class UiController():
@@ -55,7 +55,7 @@ class UiController():
         def exec(self):
             self._window.show()
             self._app.exec_()
-            self._alarm_manager.__del__()
+            self._alarm_manager.reset()
 
 
     instance = None

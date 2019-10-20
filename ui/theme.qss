@@ -36,14 +36,17 @@ NextAlarm {
 }
 
 
-DayWidget[active=true] {
+DayLabel[active=true] {
   font-size: 15px;
   color: white;
+}
+
+DayLabel[active=true][highlight=true] {
   background-color: red;
   border-radius: 15px
 }
 
-DayWidget[active=false] {
+DayLabel[active=false] {
   font-size: 15px;
   color: gray;
 }

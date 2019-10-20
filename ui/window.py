@@ -10,9 +10,9 @@ class Window(QMainWindow):
         super(Window, self).__init__(parent)
         self.setFixedSize(800, 480)
         # self.showFullScreen()
+        # self.setCursor(Qt.BlankCursor)
         self.setProperty("theme", "default")
         self.setStyleSheet(open("ui/theme.qss").read())
-        # self.setCursor(Qt.BlankCursor)
         self._theme = theme
 
         self._toolbar = ui.toolbar.ToolBar()

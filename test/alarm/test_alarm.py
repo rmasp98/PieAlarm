@@ -5,10 +5,10 @@ import mock
 
 from alarm.alarm import Alarm
 
-def create_alarm(hour=6, minute=30, days=None, repeat=True, playback=None):
+def create_alarm(hour=6, minute=30, days=None, playback=None, active=True):
     if days is None:
         days = ["Monday"]
-    return Alarm(hour, minute, days, repeat, playback)
+    return Alarm(hour, minute, days, playback, active)
 
 class AlarmTest(unittest.TestCase):
 
@@ -28,10 +28,6 @@ class AlarmTest(unittest.TestCase):
         self.assertTrue(alarm.is_day_active("Wednesday") &\
                         alarm.is_day_active("Sunday"))
 
-    def test_returns_if_repeatable(self):
-        alarm = create_alarm(repeat=True)
-        self.assertTrue(alarm.is_repeating())
-
     # Figure out how to write a test that verifies the object
     def test_returns_playback_object(self):
         playback = mock.Mock()
@@ -49,6 +45,3 @@ class AlarmTest(unittest.TestCase):
             patched.now.return_value = datetime.datetime(2019, 7, 23, 8, 0) #8am on Tuesday
             alarm = create_alarm(hour=6, minute=30, days=["Tuesday"])
             self.assertEqual(alarm.find_next_alarm(), datetime.datetime(2019, 7, 30, 6, 30))
-
-    def test_throws_error_for_no_days(self):
-        self.assertRaises(ValueError, create_alarm, days=[])
