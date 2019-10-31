@@ -1,6 +1,6 @@
-
 from PyQt5.QtWidgets import QSlider
 from PyQt5.QtCore import Qt
+
 
 class ToggleSwitch(QSlider):
     def __init__(self, active=True, parent=None):

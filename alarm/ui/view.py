@@ -1,4 +1,3 @@
-
 import PyQt5.QtWidgets
 import PyQt5.QtCore
 import PyQt5.QtGui
@@ -7,6 +6,7 @@ import ui.controller
 import alarm.alarm
 import alarm.ui.days
 import utils.layout
+
 
 class ViewScreen(PyQt5.QtWidgets.QWidget):
     def __init__(self, alarm_manager, parent=None):
@@ -33,9 +33,11 @@ class ViewScreen(PyQt5.QtWidgets.QWidget):
 
         i = 0
         for view_alarm in alarm_manager.get_alarms():
-            grid_layout.addWidget(AlarmWidget(view_alarm, view_alarm.is_active()), i/2, i % 2)
+            grid_layout.addWidget(
+                AlarmWidget(view_alarm, view_alarm.is_active()), i / 2, i % 2
+            )
             i = i + 1
-        grid_layout.addWidget(AddWidget(), i/2, i % 2)
+        grid_layout.addWidget(AddWidget(), i / 2, i % 2)
 
 
 class AlarmWidget(PyQt5.QtWidgets.QWidget):
@@ -59,6 +61,7 @@ def create_time(time, active):
     time_label.setProperty("alarm_active", active)
     return time_label
 
+
 class AddWidget(PyQt5.QtWidgets.QLabel):
     def __init__(self, parent=None):
         super(AddWidget, self).__init__(parent)
@@ -66,9 +69,11 @@ class AddWidget(PyQt5.QtWidgets.QLabel):
         self.setPixmap(pixmap.scaledToWidth(100))
         self.mouseReleaseEvent = _click_event
 
+
 def _click_event(_):
     new_alarm = alarm.alarm.Alarm(0, 0, [], None, True)
     ui.controller.UiController().set_screen("alarm_edit", edit_alarm=new_alarm)
+
 
 class TimeWidget(PyQt5.QtWidgets.QLabel):
     pass

@@ -1,4 +1,3 @@
-
 import threading
 import time
 import unittest
@@ -6,13 +5,13 @@ import mock
 
 from sound.player import Player
 
-class PlayerTest(unittest.TestCase):
 
+class PlayerTest(unittest.TestCase):
     def test_playback_fails_if_type_not_provided(self):
         self.assertFalse(self.player.play({}))
 
     def test_playback_fails_if_type_basic_but_no_track(self):
-        sound_data = {"type":"basic"}
+        sound_data = {"type": "basic"}
         self.assertFalse(self.player.play(sound_data))
 
     @mock.patch("sound.basic.Basic")
@@ -45,8 +44,7 @@ class PlayerTest(unittest.TestCase):
         self.player.stop()
         self.assertTrue(self.player.play(self.sound_data))
 
-
     def __init__(self, *args, **kwargs):
         super(PlayerTest, self).__init__(*args, **kwargs)
         self.player = Player()
-        self.sound_data = {"type":"basic", "track":"song-short.wav"}
+        self.sound_data = {"type": "basic", "track": "song-short.wav"}

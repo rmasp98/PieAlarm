@@ -1,8 +1,8 @@
-
 import datetime
 import uuid
 
 import alarm.job
+
 
 class Scheduler:
     """Basic scheduler
@@ -49,8 +49,9 @@ class Scheduler:
     def _update_next_job_time(self):
         next_time = None
         for update_job in self._jobs.values():
-            if update_job.get_time() > datetime.datetime.now() and \
-                (next_time is None or update_job.get_time() < next_time):
+            if update_job.get_time() > datetime.datetime.now() and (
+                next_time is None or update_job.get_time() < next_time
+            ):
                 next_time = update_job.get_time()
 
         self._time = next_time

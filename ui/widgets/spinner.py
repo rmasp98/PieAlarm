@@ -1,4 +1,3 @@
-
 import time
 import threading
 
@@ -6,10 +5,13 @@ from PyQt5.QtWidgets import QWidget, QSizePolicy
 from PyQt5.QtGui import QPainter
 from PyQt5.QtCore import QSize, QRect, Qt
 
+
 class Spinner(QWidget):
     def __init__(self, minimum=0, maximum=100, start=0, parent=None):
         if minimum > maximum or not minimum <= start < maximum:
-            raise ValueError("Minimum lager than maximum or start not beteen minimum and maximum")
+            raise ValueError(
+                "Minimum lager than maximum or start not beteen minimum and maximum"
+            )
 
         super(Spinner, self).__init__(parent)
         self.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
@@ -42,8 +44,10 @@ class Spinner(QWidget):
         self._update_offset(e.localPos().y() - self._drag_start)
 
     def mouseReleaseEvent(self, e):
-        dt = (time.time() - self._timer)
-        self._speed = 0.001 * (e.localPos().y() - self._true_drag_start) / (dt*dt*dt)
+        dt = time.time() - self._timer
+        self._speed = (
+            0.001 * (e.localPos().y() - self._true_drag_start) / (dt * dt * dt)
+        )
         # Need to be threaded otherwise hogs main thread
         threading.Thread(target=self._decelerate).start()
 
@@ -53,26 +57,36 @@ class Spinner(QWidget):
         num_values = self._get_num_rendered_values()
 
         font_size = self.font().pixelSize()
-        centre = int(self.height()/2)-font_size/2
-        start_pos = centre - self._spacing * int(num_values/2)
+        centre = int(self.height() / 2) - font_size / 2
+        start_pos = centre - self._spacing * int(num_values / 2)
 
         for i in range(num_values):
-            rect = QRect(int(painter.device().width()/2)-(self.width()/2),\
-                start_pos + i*self._spacing + self._offset, self.width(), font_size)
+            rect = QRect(
+                int(painter.device().width() / 2) - (self.width() / 2),
+                start_pos + i * self._spacing + self._offset,
+                self.width(),
+                font_size,
+            )
             # TODO: format should be based on size of maximum and minimum
-            painter.drawText(rect, Qt.AlignCenter,\
-                "{:0>2d}".format(self._get_bounded_value(self._value - int(num_values/2) + i)))
+            painter.drawText(
+                rect,
+                Qt.AlignCenter,
+                "{:0>2d}".format(
+                    self._get_bounded_value(self._value - int(num_values / 2) + i)
+                ),
+            )
         painter.end()
 
     def _get_bounded_value(self, value):
         return (value - self._min) % self._mod + self._min
 
     def _update_offset(self, offset):
-        if abs(offset) > self._spacing/2:
+        if abs(offset) > self._spacing / 2:
             half_point = 0.5 if offset > 0 else -0.5
-            self._value = self._get_bounded_value(\
-                self._value - int(offset/self._spacing + half_point))
-            new_offset = int(offset/self._spacing + half_point) * self._spacing
+            self._value = self._get_bounded_value(
+                self._value - int(offset / self._spacing + half_point)
+            )
+            new_offset = int(offset / self._spacing + half_point) * self._spacing
             self._drag_start = self._drag_start + new_offset
             offset = offset - new_offset
         self._offset = offset
@@ -88,13 +102,13 @@ class Spinner(QWidget):
     def _center_scroll(self):
         while abs(self._offset) > 1:
             time.sleep(0.01)
-            self._update_offset(int(self._offset/1.05))
+            self._update_offset(int(self._offset / 1.05))
         self._update_offset(0)
 
     def _get_num_rendered_values(self):
-        num_values = int(self.height()/self._spacing)
-        if num_values % 2 == 0: # Always force odd number
+        num_values = int(self.height() / self._spacing)
+        if num_values % 2 == 0:  # Always force odd number
             num_values = num_values + 1
-        if num_values == 1: # Always render at least a number both sides of value
+        if num_values == 1:  # Always render at least a number both sides of value
             num_values = 3
         return num_values

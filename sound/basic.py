@@ -1,15 +1,17 @@
 import wave
 import pyaudio
 
+
 class Basic:
     def __init__(self, file):
         self._track = wave.open(file)
         self._pause = False
-        self._stream = pyaudio.PyAudio().open(\
-            format=pyaudio.PyAudio().get_format_from_width(self._track.getsampwidth()),\
-            channels=self._track.getnchannels(),\
-            rate=self._track.getframerate(),\
-            output=True)
+        self._stream = pyaudio.PyAudio().open(
+            format=pyaudio.PyAudio().get_format_from_width(self._track.getsampwidth()),
+            channels=self._track.getnchannels(),
+            rate=self._track.getframerate(),
+            output=True,
+        )
 
     def __del__(self):
         self._stream.stop_stream()
@@ -19,7 +21,7 @@ class Basic:
     def play(self, chunk=1024):
         self._pause = False
         data = self._track.readframes(chunk)
-        while not self._pause and data != b'':
+        while not self._pause and data != b"":
             self._stream.write(data)
             data = self._track.readframes(chunk)
 

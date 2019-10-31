@@ -1,10 +1,10 @@
-
 import datetime
 
 import alarm.scheduler
 import alarm.job
 import sound.player
 import ui.controller
+
 
 class Manager:
     """Alarm Manager
@@ -17,8 +17,11 @@ class Manager:
     It also manages change of screen to a snooze screen and back
     """
 
-    def __init__(self, new_scheduler=alarm.scheduler.Scheduler(),\
-                       new_player=sound.player.Player()):
+    def __init__(
+        self,
+        new_scheduler=alarm.scheduler.Scheduler(),
+        new_player=sound.player.Player(),
+    ):
         """Accpets new scheduler and player but this is largely for testing"""
         self._alarms = {}
         self._scheduler = new_scheduler
@@ -44,7 +47,9 @@ class Manager:
         """Accepts an alarm (of type alarm), adding to internal list and
         scheduling next alarm time"""
         if new_alarm.is_active():
-            self._alarms[new_alarm] = self._scheduler.add_job(new_alarm.find_next_alarm())
+            self._alarms[new_alarm] = self._scheduler.add_job(
+                new_alarm.find_next_alarm()
+            )
         else:
             self._alarms[new_alarm] = None
 
@@ -86,8 +91,7 @@ class Manager:
             if play_alarm is not None:
                 ui.controller.UiController().set_screen("snooze")
                 if self._player.play(play_alarm.get_playback()) and self._snoozed:
-                    new_time = datetime.datetime.now()\
-                        + datetime.timedelta(minutes=10)
+                    new_time = datetime.datetime.now() + datetime.timedelta(minutes=10)
                 else:
                     new_time = play_alarm.find_next_alarm()
                 self._alarms[play_alarm] = self._scheduler.add_job(new_time)

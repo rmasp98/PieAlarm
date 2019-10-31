@@ -1,4 +1,3 @@
-
 import unittest
 import datetime
 import mock
@@ -8,8 +7,8 @@ from alarm.manager import Manager
 # tests
 # Background job to check num jobs == num alarms
 
-class ManagerTest(unittest.TestCase):
 
+class ManagerTest(unittest.TestCase):
     def test_returns_empty_alarms_set(self):
         self.assertSetEqual(self.manager.get_alarms(), set())
 
@@ -52,8 +51,8 @@ class ManagerTest(unittest.TestCase):
         self.manager.create_alarm(self.alarm)
         self.scheduler.add_job.assert_not_called()
 
-##########################################################################
-# These call a private function to remove dependency on scheduler and job
+    ##########################################################################
+    # These call a private function to remove dependency on scheduler and job
 
     @mock.patch("ui.controller.UiController", mock.Mock())
     def test_nothing_called_if_job_returns_failed(self):
@@ -73,12 +72,16 @@ class ManagerTest(unittest.TestCase):
     def test_trigger_alarm_snoozes_by_default(self):
         self.manager.create_alarm(self.alarm)
         self.scheduler.reset_mock()
-        with mock.patch.object(datetime, 'datetime',\
-            mock.Mock(wraps=datetime.datetime)) as patched:
-            patched.now.return_value = datetime.datetime(2019, 7, 21, 8, 0) #8am on Sunday
+        with mock.patch.object(
+            datetime, "datetime", mock.Mock(wraps=datetime.datetime)
+        ) as patched:
+            patched.now.return_value = datetime.datetime(
+                2019, 7, 21, 8, 0
+            )  # 8am on Sunday
             self.manager._trigger_alarm(self.uid, True)
-            self.scheduler.add_job.assert_called_once_with(\
-                datetime.datetime(2019, 7, 21, 8, 10))
+            self.scheduler.add_job.assert_called_once_with(
+                datetime.datetime(2019, 7, 21, 8, 10)
+            )
 
     @mock.patch("ui.controller.UiController", mock.Mock())
     def test_trigger_alarm_schedules_next_alarm_if_stop_called(self):
@@ -105,13 +108,16 @@ class ManagerTest(unittest.TestCase):
         self.scheduler.remove_job.assert_called_once_with("new_uid")
 
     @mock.patch("ui.controller.UiController")
-    def test_trigger_alarm_changes_screen_to_snooze_screen_and_back(self, controller_mock):
+    def test_trigger_alarm_changes_screen_to_snooze_screen_and_back(
+        self, controller_mock
+    ):
         self.manager.create_alarm(self.alarm)
         self.manager._trigger_alarm(self.uid, True)
-        controller_mock.return_value.set_screen.assert_has_calls(\
-            [mock.call("snooze"), mock.call("back")], any_order=False)
+        controller_mock.return_value.set_screen.assert_has_calls(
+            [mock.call("snooze"), mock.call("back")], any_order=False
+        )
 
-################################################################################
+    ################################################################################
 
     def test_snooze_stops_current_playback(self):
         self.manager.snooze()
@@ -131,7 +137,6 @@ class ManagerTest(unittest.TestCase):
     def test_calling_reset_calls_scheduler_reset(self):
         self.manager.reset()
         self.scheduler.reset.assert_called_once()
-
 
     def __init__(self, *args, **kwargs):
         super(ManagerTest, self).__init__(*args, **kwargs)

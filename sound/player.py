@@ -1,8 +1,7 @@
-
 import sound.basic
 
-class Player:
 
+class Player:
     def __init__(self):
         self._playing = False
         self._player = None

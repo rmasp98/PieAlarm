@@ -1,11 +1,10 @@
-
 from PyQt5.QtWidgets import QLabel, QToolBar, QHBoxLayout, QWidget
 from PyQt5.QtGui import QPixmap
 
 import ui.controller
 
-class ToolBar(QToolBar):
 
+class ToolBar(QToolBar):
     def __init__(self, parent=None):
         super(ToolBar, self).__init__(parent)
         self.setMaximumHeight(40)
@@ -37,25 +36,25 @@ class ToolBar(QToolBar):
 
 
 class BackButton(QLabel):
-
     def __init__(self, parent=None):
         super(BackButton, self).__init__(parent)
         pixmap = QPixmap("ui/icons/back.png")
         self.setPixmap(pixmap.scaledToWidth(40))
         self.mouseReleaseEvent = _back_event
 
+
 def _back_event(_):
     ui.controller.UiController().set_screen("back")
 
-class SaveButton(QLabel):
 
+class SaveButton(QLabel):
     def __init__(self, parent=None):
         super(SaveButton, self).__init__(parent)
         pixmap = QPixmap("ui/icons/save.png")
         self.setPixmap(pixmap.scaledToWidth(30))
 
-class DeleteButton(QLabel):
 
+class DeleteButton(QLabel):
     def __init__(self, parent=None):
         super(DeleteButton, self).__init__(parent)
         pixmap = QPixmap("ui/icons/delete.png")

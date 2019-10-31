@@ -1,10 +1,10 @@
-
 import PyQt5.QtWidgets
 import PyQt5.QtGui
 
 import utils.layout
 
-icons = {"sunny":"ui/icons/sun.png", "none":"ui/icons/no_weather.png"}
+icons = {"sunny": "ui/icons/sun.png", "none": "ui/icons/no_weather.png"}
+
 
 class WeatherWidget(PyQt5.QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -23,7 +23,9 @@ class WeatherWidget(PyQt5.QtWidgets.QWidget):
 
     def update(self, temperature, weather):
         pixmap = PyQt5.QtGui.QPixmap(icons[weather])
-        self.findChild(PyQt5.QtWidgets.QLabel, "icon").setPixmap(pixmap.scaledToWidth(100))
+        self.findChild(PyQt5.QtWidgets.QLabel, "icon").setPixmap(
+            pixmap.scaledToWidth(100)
+        )
         self.findChild(PyQt5.QtWidgets.QLabel, "temperature").setText(str(temperature))
 
 

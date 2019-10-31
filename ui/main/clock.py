@@ -1,4 +1,3 @@
-
 import PyQt5.QtCore
 import PyQt5.QtWidgets
 
@@ -16,5 +15,5 @@ class DigitalClock(PyQt5.QtWidgets.QLabel):
     # TODO: should probably convert this to datetime
     def show_time(self):
         time = PyQt5.QtCore.QTime.currentTime()
-        text = time.toString('hh:mm')
+        text = time.toString("hh:mm")
         self.setText(text)

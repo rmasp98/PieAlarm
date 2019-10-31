@@ -1,12 +1,11 @@
-
 import datetime
 import PyQt5.QtWidgets
 
 import ui.controller
 import alarm.alarm
 
-class NextAlarm(PyQt5.QtWidgets.QLabel):
 
+class NextAlarm(PyQt5.QtWidgets.QLabel):
     def __init__(self, time, parent=None):
         super(NextAlarm, self).__init__(parent)
         self.set_time(time)
@@ -16,15 +15,26 @@ class NextAlarm(PyQt5.QtWidgets.QLabel):
         if time is not None:
             now = datetime.datetime.now()
             if time.weekday() == now.weekday() and time.time() > now.time():
-                self.setText("Next Alarm:\n" + "{:0>2d}:{:0>2d}".format(time.hour, time.minute))
+                self.setText(
+                    "Next Alarm:\n" + "{:0>2d}:{:0>2d}".format(time.hour, time.minute)
+                )
             elif time.weekday() == (now + datetime.timedelta(days=1)).weekday():
-                self.setText("Next Alarm:\n" + "Tomorrow {:0>2d}:{:0>2d}".format(\
-                    time.hour, time.minute))
+                self.setText(
+                    "Next Alarm:\n"
+                    + "Tomorrow {:0>2d}:{:0>2d}".format(time.hour, time.minute)
+                )
             else:
-                self.setText("Next Alarm:\n" + "{} {:0>2d}:{:0>2d}".format(\
-                    alarm.alarm.Alarm.Weekdays[time.weekday()], time.hour, time.minute))
+                self.setText(
+                    "Next Alarm:\n"
+                    + "{} {:0>2d}:{:0>2d}".format(
+                        alarm.alarm.Alarm.Weekdays[time.weekday()],
+                        time.hour,
+                        time.minute,
+                    )
+                )
         else:
             self.setText("No Alarms")
+
 
 def _click_event(_):
     ui.controller.UiController().set_screen("alarm_view")

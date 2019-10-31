@@ -1,0 +1,23 @@
+Notes for weather package
+
+  - main screen will display basic info
+    - image and temperature
+  - weather screen will show advanced information
+    - tabs for weeks/days info
+ - options for configuring what is displayed
+    - which API to use (will likely just be one)
+    - location
+      - (met) val/wxfcs/all/datatype/sitelist returns available locations
+  - Met office has a good API
+    - base url: http://datapoint.metoffice.gov.uk/public/data/
+    - location: val/wxfcs/all/json/sitelist\?key\=<api-key>
+    - forecast: val/wxfcs/all/json/<location-id>?res=<type>&key=<api-key>&time=<time>
+      - guildford = 310080
+      - type: 3hourly / daily
+      - time: 2012-11-19T15:00:00 (optional)
+      - example: val/wxfcs/all/json/310080?res=3hourly&key=<api-key>
+
+
+
+
+

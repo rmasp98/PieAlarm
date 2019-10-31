@@ -1,8 +1,8 @@
-
 import threading
 import datetime
 
 import utils.signal
+
 
 class Job:
     """Basic job to be scheduled
@@ -11,6 +11,7 @@ class Job:
     killed. In order to receive the signal, subscribe using the class
     function subscribe
     """
+
     _complete = utils.signal.Signal()
 
     @classmethod

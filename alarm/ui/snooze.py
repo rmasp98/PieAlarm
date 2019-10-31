@@ -1,10 +1,9 @@
-
 import PyQt5.QtWidgets
 
 import utils.layout
 
-class SnoozeScreen(PyQt5.QtWidgets.QWidget):
 
+class SnoozeScreen(PyQt5.QtWidgets.QWidget):
     def __init__(self, alarm_manager, parent=None):
         super(SnoozeScreen, self).__init__(parent)
         self._alarm_manager = alarm_manager

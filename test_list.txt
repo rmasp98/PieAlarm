@@ -1,0 +1,27 @@
+test list
+ - alarm/
+   - ui/
+     - edit/
+       - days (small)
+       - edit
+       - playback
+   - Widgets (for create new alarm event?)
+ - ui/
+   - main/
+     - screen (show weather)
+     - weather (update and show/hide)
+   - widgets/
+     - Spinner
+     - toggle (maybe)
+ - controller
+ - toolbar (show and mouseevent for save/delete)
+ - window (set theme)
+
+already tested
+ - alarm
+   - alarm
+   - job
+   - manager
+   -scheduler
+ - sound
+   - player

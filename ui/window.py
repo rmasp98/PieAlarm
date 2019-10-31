@@ -1,11 +1,10 @@
-
 from PyQt5.QtWidgets import QMainWindow
 
 import ui.main.screen as MainUI
 import ui.toolbar
 
-class Window(QMainWindow):
 
+class Window(QMainWindow):
     def __init__(self, theme="default", parent=None):
         super(Window, self).__init__(parent)
         self.setFixedSize(800, 480)

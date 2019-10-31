@@ -1,4 +1,3 @@
-
 import PyQt5.QtWidgets
 import ui.main.clock
 import ui.main.weather
@@ -6,8 +5,8 @@ import alarm.ui.nextalarm
 
 import utils.layout
 
-class Screen(PyQt5.QtWidgets.QWidget):
 
+class Screen(PyQt5.QtWidgets.QWidget):
     def __init__(self, alarm_manager, parent=None):
         super(Screen, self).__init__(parent)
         self.setup_screen(alarm_manager.get_next_alarm_time())

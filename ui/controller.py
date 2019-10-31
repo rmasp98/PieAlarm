@@ -1,6 +1,5 @@
-
 import collections
-from PyQt5.QtWidgets import QApplication
+import PyQt5.QtWidgets
 from PyQt5.QtGui import QFontDatabase
 import PyQt5.QtCore
 
@@ -12,12 +11,11 @@ import alarm.ui.view as AlarmView
 import alarm.ui.edit as AlarmEdit
 import alarm.ui.snooze as AlarmSnooze
 
-class UiController():
 
-    class _UiController():
-
+class UiController:
+    class _UiController:
         def __init__(self, screen="main", theme="default"):
-            self._app = QApplication([])
+            self._app = PyQt5.QtWidgets.QApplication([])
             self._window = ui.window.Window()
             QFontDatabase.addApplicationFont("fonts/square_sans_serif_7.ttf")
             self._alarm_manager = alarm.manager.Manager()
@@ -28,7 +26,6 @@ class UiController():
 
             self.set_screen(screen, False)
             self.set_theme(theme)
-
 
         def set_theme(self, theme):
             self._window.set_theme(theme)
@@ -57,7 +54,6 @@ class UiController():
             self._app.exec_()
             self._alarm_manager.reset()
 
-
     instance = None
 
     def __init__(self, screen="main", theme="default"):
@@ -70,6 +66,7 @@ class UiController():
 
 class ScreenSignal(PyQt5.QtCore.QObject):
     _signal = PyQt5.QtCore.pyqtSignal(str, bool)
+
     def __init__(self, slot, parent=None):
         super(ScreenSignal, self).__init__(parent)
         self._signal.connect(slot)
@@ -77,9 +74,10 @@ class ScreenSignal(PyQt5.QtCore.QObject):
     def emit(self, screen, append_back):
         self._signal.emit(screen, append_back)
 
+
 screens = {
     "main": MainUI.Screen,
     "alarm_edit": AlarmEdit.EditScreen,
     "alarm_view": AlarmView.ViewScreen,
-    "snooze": AlarmSnooze.SnoozeScreen
+    "snooze": AlarmSnooze.SnoozeScreen,
 }

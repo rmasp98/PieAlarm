@@ -1,12 +1,11 @@
-
 import unittest
 import datetime
 import mock
 
 from alarm.scheduler import Scheduler
 
-class SchedulerTest(unittest.TestCase):
 
+class SchedulerTest(unittest.TestCase):
     @mock.patch("alarm.job.Job.start", mock.Mock())
     def test_returns_none_for_time_when_no_job(self):
         self.assertIsNone(self.scheduler.get_next_job_time())
