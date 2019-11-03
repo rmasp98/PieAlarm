@@ -11,7 +11,7 @@ class Player:
             if sound_data["type"] == "basic" and "track" in sound_data:
                 print(self._playing)
                 self._playing = True
-                self._player = sound.basic.Basic("sound/tracks/" + sound_data["track"])
+                self._player = sound.basic.Basic(sound_data["track"])
                 self._player.play()
                 self._playing = False
                 return True

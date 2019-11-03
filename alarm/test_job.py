@@ -8,11 +8,6 @@ from alarm.job import Job
 
 
 class JobTest(unittest.TestCase):
-    def test_returns_job_time(self):
-        job_time = datetime.datetime(2019, 8, 21, 8, 34)
-        job = create_job(dt=job_time)
-        self.assertEqual(job.get_time(), job_time)
-
     @mock.patch.object(threading.Event, "wait", return_value=False)
     def test_calls_wait_with_time_till_alarm(self, mock_method):
         with mock.patch.object(

@@ -90,7 +90,7 @@ class Manager:
             play_alarm = self._get_alarm_from_uid(uid)
             if play_alarm is not None:
                 ui.controller.UiController().set_screen("snooze")
-                if self._player.play(play_alarm.get_playback()) and self._snoozed:
+                if self._player.play(play_alarm.playback()) and self._snoozed:
                     new_time = datetime.datetime.now() + datetime.timedelta(minutes=10)
                 else:
                     new_time = play_alarm.find_next_alarm()

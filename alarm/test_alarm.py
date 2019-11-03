@@ -8,7 +8,7 @@ import alarm.alarm
 class AlarmTest(unittest.TestCase):
     def test_get_alarm_returns_correct_datetime_object(self):
         test_alarm = alarm.alarm.Alarm(hour=6, minute=30)
-        self.assertEqual(test_alarm.get_time(), datetime.time(6, 30))
+        self.assertEqual(test_alarm.time(), datetime.time(6, 30))
 
     def test_returns_true_if_day_is_active(self):
         test_alarm = alarm.alarm.Alarm(days=["Monday"])

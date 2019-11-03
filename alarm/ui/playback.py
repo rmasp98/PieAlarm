@@ -1,4 +1,6 @@
 import os
+import pathlib
+import glob
 import PyQt5.QtWidgets
 
 import utils.layout
@@ -80,8 +82,12 @@ class _PlaybackCombo(PyQt5.QtWidgets.QWidget):
         self._combo.activated[str].connect(callback)
 
 
+# TODO: I want to eventually just display file name
+# which can be done keeping as PosixPath and calling name()
 def _get_tracks():
-    return os.listdir("sound/tracks")
+    files = list(pathlib.Path("sound/tracks").rglob("*.wav"))
+    files.extend(pathlib.Path("sound/tracks").rglob("*.mp3"))
+    return [i.as_posix() for i in files]
 
 
 def _get_playlists():

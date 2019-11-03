@@ -1,7 +1,7 @@
 import threading
 import datetime
 
-import utils.signal
+import utils.observer
 
 
 class Job:
@@ -12,7 +12,7 @@ class Job:
     function subscribe
     """
 
-    _complete = utils.signal.Signal()
+    _complete = utils.observer.Observer()
 
     @classmethod
     def subscribe(cls, callback):

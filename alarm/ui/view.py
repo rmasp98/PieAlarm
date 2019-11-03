@@ -49,7 +49,7 @@ class AlarmWidget(PyQt5.QtWidgets.QWidget):
         self.mouseReleaseEvent = self._click_event
 
         layout = utils.layout.create_vertical_layout(self)
-        layout.addWidget(create_time(view_alarm.get_time(), active))
+        layout.addWidget(create_time(view_alarm.time(), active))
         layout.addWidget(alarm.ui.days.DaysWidget(view_alarm))
 
     def _click_event(self, _):

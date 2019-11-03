@@ -25,7 +25,7 @@ class EditScreen(PyQt5.QtWidgets.QWidget):
         h_widget.setMinimumHeight(200)
         h_layout = utils.layout.create_horizontal_layout(h_widget, layout)
         self._time_widget = alarm.ui.time.TimeEdit(
-            self._alarm.get_time().hour, self._alarm.get_time().minute
+            self._alarm.time().hour, self._alarm.time().minute
         )
         h_layout.addWidget(self._time_widget)
 
@@ -35,7 +35,7 @@ class EditScreen(PyQt5.QtWidgets.QWidget):
         self._days_widget = alarm.ui.days.DaysWidget(self._alarm, True)
         layout.addWidget(self._days_widget)
 
-        self._playback = alarm.ui.playback.PlaybackWidget(self._alarm.get_playback())
+        self._playback = alarm.ui.playback.PlaybackWidget(self._alarm.playback())
         layout.addWidget(self._playback)
 
     def _save(self, _):

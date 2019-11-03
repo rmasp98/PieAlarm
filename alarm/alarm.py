@@ -29,7 +29,7 @@ class Alarm:
             for day in days:
                 self._days.add(self._check_day_is_valid(day))
 
-    def get_time(self):
+    def time(self):
         """Returns the time for the alarm as datetime object"""
         return self._time
 
@@ -38,7 +38,7 @@ class Alarm:
         form displayed in the alarm.Weekdays list"""
         return day in self._days
 
-    def get_playback(self):
+    def playback(self):
         """Returns playback metadata as a dictionary. Details about valid
         keys and values can be found in the sound package"""
         return self._playback
