@@ -1,6 +1,5 @@
 import unittest
 import datetime
-import mock
 
 import alarm.alarm
 
@@ -36,8 +35,8 @@ class AlarmTest(unittest.TestCase):
         self.assertEqual(test_alarm.find_next_alarm().weekday(), 2)
 
     def test_does_not_return_today_if_time_has_passed(self):
-        with mock.patch.object(
-            datetime, "datetime", mock.Mock(wraps=datetime.datetime)
+        with unittest.mock.patch.object(
+            datetime, "datetime", unittest.mock.Mock(wraps=datetime.datetime)
         ) as patched:
             patched.now.return_value = datetime.datetime(
                 2019, 7, 23, 8, 0

@@ -17,26 +17,16 @@ class Scheduler:
         self._jobs = {}
         alarm.job.Job.subscribe(self._job_complete)
 
-    def reset(self):
-        """This will ensure that all job threads are killed of at the end"""
-        self._remove_all_jobs()
-
     def get_next_job_time(self):
         """Returns time (as datetime) of soonest job to execute"""
         return self._time
-
-    def get_num_jobs(self):
-        """Returns total number of jobs currently running"""
-        return len(self._jobs)
 
     def add_job(self, time):
         """Accepts a datetime object for when job will execute.
         Jobs in past will execute immediately"""
         uid = str(uuid.uuid4())
-        new_job = alarm.job.Job(uid, time)
-        self._jobs[uid] = new_job
+        self._jobs[uid] = alarm.job.Job(uid, time)
         self._update_next_job_time()
-        new_job.start()
         return uid
 
     def remove_job(self, uid):
@@ -45,6 +35,12 @@ class Scheduler:
         if removed_job is not None:
             removed_job.kill()
             self._update_next_job_time()
+
+    def reset(self):
+        """This will ensure that all job threads are killed of at the end"""
+        jobs = list(self._jobs.keys())
+        for remove_job in jobs:
+            self.remove_job(remove_job)
 
     def _update_next_job_time(self):
         next_time = None
@@ -58,8 +54,3 @@ class Scheduler:
 
     def _job_complete(self, uid, _):
         self.remove_job(uid)
-
-    def _remove_all_jobs(self):
-        jobs = list(self._jobs.keys())
-        for remove_job in jobs:
-            self.remove_job(remove_job)

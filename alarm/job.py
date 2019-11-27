@@ -22,20 +22,17 @@ class Job:
 
     def __init__(self, uid, time):
         """Provide a unique identifier (uid) and the time that the job
-        should trigger"""
+        should trigger. This will create a thread that will count down to 
+        notification"""
         self._uid = uid
         self._time = time
         self._event = threading.Event()
-        self._thread = threading.Thread(target=self._execute)
+        job_thread = threading.Thread(target=self._execute)
+        job_thread.start()
 
     def get_time(self):
         """Returns datetime for when the job will execute"""
         return self._time
-
-    def start(self):
-        """Starts a seperate thread to wait until execution of job.
-        If reaches time, emits job success signal"""
-        self._thread.start()
 
     def kill(self):
         """Kills job which emits a job failure signal"""
@@ -43,4 +40,4 @@ class Job:
 
     def _execute(self):
         time_till_alarm = self._time.timestamp() - datetime.datetime.now().timestamp()
-        Job._complete.notify(self._uid, not self._event.wait(time_till_alarm))
+        self._complete.notify(self._uid, not self._event.wait(time_till_alarm))
