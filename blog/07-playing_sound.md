@@ -48,10 +48,10 @@ We will have make sure that we catch this elsewhere in the application and displ
 
 ### Loading a WAV file
 
-So now that we have given out the warning about incorrect file types, we should try to load our first file. The go to audio file format seems to be .wav so we will start with loading this type of file. Note at this point you are going to be a real ``.wav`` file to test with. As we are using the PyDub library, it is simply a matter of checking to see if the wav loader from this library is called:
+So now that we have given out the warning about incorrect file types, we should try to load our first file. The go to audio file format seems to be .wav so we will start with loading this type of file. Note at this point you are going to need a real ``.wav`` file to test with. As we are using the PyDub library, it is simply a matter of checking to see if the wav loader from this library is called:
 ```python
 @mock.patch("pydub.AudioSegment.from_wav")
-def test_can_load_an_mp3_file(self, wav_mock):
+def test_can_load_a_wav_file(self, wav_mock):
     sound.basic.Basic("Hello.wav")
     wav_mock.assert_called_once()
 ```
@@ -64,21 +64,21 @@ else:
     raise ValueError("File format not recognised")
 ```
 
-The ``-4`` here tells python that it needs to find the 4th from end element in the array. The colon tells python be want a range of elements and the lack of a number says that it should be until the end of the string. This code will then get the test to compile. However, as I am writing this, I have found a way to more thoroughly check the file type by checking its MIME type (a magic set of bits that define a file). So lets implement that now!
+The ``-4`` here tells python that it needs to find the 4th from end element in the array. The colon tells python be want a range of elements and the lack of a number after says that it should be until the end of the string. This code will then get the test to compile. However, as I am writing this, I have found a way to more thoroughly check the file type by checking its MIME type (a magic set of bits that define a file). So lets implement that now!
 
-The library is called [filetype](https://pypi.org/project/filetype/). You can use this library to check the mime type as PyDub does not care about the filename, it loads based on the content of the file. To use this library, we simply pass the file path to the ``guess`` function and then examine the ``mime`` output of the returned object. If this is equal to ``"audio/x-wav"`` then we know it is a ``.wav`` file. We also need to check if the return object is None as this will obviously not have the attribute ``mime``:
+The library is called [filetype](https://pypi.org/project/filetype/). You can use this library to check the mime type. This is a better approach as PyDub does not care about the filename, it loads based on the content of the file. To use this library, we simply pass the file path to the ``guess`` function and then examine the ``mime`` output of the returned object. If this is equal to ``"audio/x-wav"`` then we know it is a ``.wav`` file. We also need to check if the return object is None as this will obviously not have the attribute ``mime``:
 ```python
 file_type = filetype.guess(file_path)
 if file_type is not None and file_type.mime == "audio/x-wav":
     track = pydub.AudioSegment.from_wav(file_path) 
 ```
 
-Hopefully our tests should still be passing. Now that this part is complete and as we know this part of the function will get larger as we introduce new file formats, we should break this part off into a separate function.
+Hopefully our tests should still be passing. Now that this part is complete and as we know this part of the function will get larger as we introduce new file formats, we should break this part off into a separate function but I will leave that as an exercise for you.
 
 
 ### Configure the stream
 
-The next thing that we need to do before we are able to play the file is get the stream, that the file will be playing over, initialised. This part is handled by PyAudio and requires various bits of information from the file in order to play correctly. Here we are going to create a helper function for the test that creates an AudioSegment mock with the correct attributes. We can then compare the values in this mock to what is called when opening the stream.
+The next thing that we need to do before we are able to play the file is to create the stream that the file will be playing over. This part is handled by PyAudio and requires various bits of information from the file in order to play correctly. Here we are going to create a helper function for the test that creates an AudioSegment mock with the correct attributes. We can then compare the values in this mock to what is called when opening the stream.
 ```python
 _width = 1
 _channels = 2
@@ -93,7 +93,7 @@ def create_audio_mock(sample_width, channels, frame_rate):
     return audio_mock
 ```
 
-Because we need this in the patching decorator, which does not have access to the object variables, we need to declare this in the global scope (outside of the class). This feels a little bit nasty as we are being incredibly prescriptive in the test about what the code needs to do, which I think slightly defeats the point but it is the only way I can think to do it for now. I may come back to this and do it properly later.
+Because we need to use this function in the patching decorator, which does not have access to the the test instance variables, we need to declare this in the global scope (outside of the class). This feels a little bit nasty as we are being incredibly prescriptive in the test about what the code needs to do, which I think slightly defeats the point but it is the only way I can think to do it for now. I may come back to this and do it properly later.
 
 The test then simply creates a Basic sound object and checks to see if the open function of PyAudio is called with the correct parameters of the AudioSegment from PyDub:
 ```python
@@ -126,6 +126,7 @@ pyaudio.PyAudio().open(
 
 Now that we have our file loaded and a stream prepared, all that is left is to actually play the sound. This requires us to write the bytes from the file to the stream, which overall is pretty simple. We will have to do some more complex stuff with this shortly but lets get that functionality in our code first. The test will simply create a sound, play it and then check to see if the the bytes from the file have been passed to the output stream.
 ```python
+@mock.patch("pydub.AudioSegment")
 def test_writes_sound_buffer_to_stream(self, dub_mock, audio_mock):
     basic = sound.basic.Basic("sound/tracks/song.wav")
     basic.play()
@@ -140,6 +141,27 @@ To get this test to pass, we need to create object variables for both the track 
 ```python
 def play(self):
     self._stream.write(self._track[:].raw_data)
+```
+
+The colon between square brackets of ``_track`` basically says we want the entire array. Again this is boilerplate to make the test pass (show we are accessing an element of the array), because in later we will be accessing subsections of the array and I don't want to have to go back a rewrite the test.
+
+I think at this point, it would also probably be a good idea to refactor the tests to move the mocking of both ``PyAudio`` and ``AudioSegment`` to class wide. This will just make the tests look a little cleaner as nearly all tests from this point will require both the be mocked. This can be done by placing:
+```python
+@mock.patch("pyaudio.PyAudio")
+@mock.patch("pydub.AudioSegment")
+```
+
+just above the beginning of the class. Then don't forget to add the required mock parameters to each test function. You can use an ``_`` if the mock is not required in the class. Strangely, the mocks need to appear in the function declaration in the opposite order to how they appear in the patches above the class. This had me stumped for a while... If you are unsure, just check the tests in the [github repo]() to see how I did it.
+
+
+Stuff to mention
+Full buffer writen to stream
+Remove last tests
+pause
+continues after pause
+stop plays from beginning
+
+
 
 
 

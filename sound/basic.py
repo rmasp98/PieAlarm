@@ -5,6 +5,8 @@ import filetype
 
 class Basic:
     def __init__(self, file_path):
+        self._pause = False
+        self._track_pos = 0
         self._track = self._load_file(file_path)
         self._stream = pyaudio.PyAudio().open(
             format=pyaudio.PyAudio().get_format_from_width(self._track.sample_width),
@@ -20,29 +22,27 @@ class Basic:
                 return pydub.AudioSegment.from_wav(file_path)
         raise ValueError("File format not recognised. Please check " + file_path)
 
-    # def __init__(self, file, chunk_size=1024):
-    #     self._pause = False
-    #     self._chunks = pydub.utils.make_chunks(self._track, chunk_size)
-    #     self._chunk_index = 0
+    def close(self):
+        self._stream.stop_stream()
+        self._stream.close()
 
-    # def __del__(self):
-    #     self._stream.stop_stream()
-    #     self._stream.close()
-    #     self._track.close()
+    def __del__(self):
+        self.close()
 
-    def play(self):
-        self._stream.write(self._track[:].raw_data)
+    def play(self, chunk_size=1000):
+        self._pause = False
+        while self._track_pos < len(self._track):
+            if self._pause:
+                return
+            end_pos = self._track_pos + chunk_size
+            if end_pos > len(self._track):
+                end_pos = len(self._track)
+            self._stream.write(self._track[self._track_pos : end_pos].raw_data)
+            self._track_pos = self._track_pos + chunk_size
 
-    #     self._pause = False
-    #     while self._chunk_index < len(self._chunks):
-    #         if self._pause:
-    #             return
-    #         self._stream.write(self._chunks[self._chunk_index].raw_data)
-    #         self._chunk_index = self._chunk_index + 1
+    def pause(self):
+        self._pause = True
 
-    # def pause(self):
-    #     self._pause = True
-
-    # def stop(self):
-    #     self._pause = True
-    #     self._chunk_index = 0
+    def stop(self):
+        self._pause = True
+        self._track_pos = 0
