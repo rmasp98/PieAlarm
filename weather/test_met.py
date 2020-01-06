@@ -18,13 +18,13 @@ class MetTest(unittest.TestCase):
             self.met.get_locations(self.location_path), self.location_array
         )
 
-    # @mock.patch("weather.met.MetWeather.get_locations")
-    # def test_get_weather_will_call_get_locations_if_not_already_done(
-    #     self, get_mock, location_mock
-    # ):
-    #     get_mock.get(self.base_url + self.location_id)
-    #     self.met.get_weather(self.location)
-    #     location_mock.assert_called_once()
+    @mock.patch("weather.met.MetWeather.get_locations")
+    def test_get_weather_will_call_get_locations_if_not_already_done(
+        self, get_mock, location_mock
+    ):
+        get_mock.get(self.base_url + self.location_id)
+        self.met.get_weather(self.location)
+        location_mock.assert_called_once()
 
     @mock.patch("weather.met.MetWeather.get_locations", mock.Mock())
     def test_raises_if_location_is_not_a_valid_location(self, get_mock):

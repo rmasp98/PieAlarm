@@ -1,4 +1,5 @@
 import unittest
+import unittest.mock
 import datetime
 
 import alarm.alarm
@@ -22,9 +23,10 @@ class AlarmTest(unittest.TestCase):
             test_alarm.is_day_active("Wednesday") & test_alarm.is_day_active("Sunday")
         )
 
-    # Figure out how to write a test that verifies the object
-    def test_verifies_playback_object_is_valid(self):
-        self.fail("Need to implement this!")
+    @unittest.mock.patch("sound.player.Player")
+    def test_verifies_playback_object_is_valid(self, player_mock):
+        alarm.alarm.Alarm(6, 30, ["Monday"])
+        player_mock.verify_sound_data.assert_called_once()
 
     def test_returns_correct_next_alarm_time(self):
         test_alarm = alarm.alarm.Alarm(6, 30, ["Monday"])

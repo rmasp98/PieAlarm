@@ -1,22 +1,39 @@
 import sound.basic
 
 
+# Basic
+# Playlist
+# media player Single
+# media player playlist
+# Random
+
+
 class Player:
     def __init__(self):
-        self._playing = False
         self._player = None
 
-    def play(self, sound_data):
-        if not self._playing and "type" in sound_data:
+    @classmethod
+    def verify_sound_data(cls, sound_data):
+        if "type" in sound_data:
             if sound_data["type"] == "basic" and "track" in sound_data:
-                print(self._playing)
-                self._playing = True
-                self._player = sound.basic.Basic(sound_data["track"])
+                return True
+        return False
+
+    def play(self, sound_data):
+        if self._player is None:
+            self._player = self._get_player(sound_data)
+            if self._player is not None:
                 self._player.play()
-                self._playing = False
+                self._player.close()
+                self._player = None
                 return True
         return False
 
     def stop(self):
         if self._player is not None:
             self._player.stop()
+
+    def _get_player(self, sound_data):
+        if self.verify_sound_data(sound_data):
+            if sound_data["type"] == "basic":
+                return sound.basic.Basic(sound_data["track"])

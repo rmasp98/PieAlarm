@@ -14,10 +14,10 @@ class PlayerTest(unittest.TestCase):
         sound_data = {"type": "basic"}
         self.assertFalse(self.player.play(sound_data))
 
-    # @mock.patch("sound.basic.Basic")
-    # def test_creates_basic_object_when_selected(self, basic):
-    #     self.player.play(self.sound_data)
-    #     basic.assert_called_once_with("sound/tracks/" + self.sound_data["track"])
+    @mock.patch("sound.basic.Basic")
+    def test_creates_basic_object_when_selected(self, basic):
+        self.player.play(self.sound_data)
+        basic.assert_called_once_with(self.sound_data["track"])
 
     @mock.patch("sound.basic.Basic")
     def test_plays_basic_player_when_selected(self, basic):
@@ -27,14 +27,14 @@ class PlayerTest(unittest.TestCase):
     @mock.patch("sound.basic.Basic")
     def test_returns_false_if_player_is_already_playing(self, basic):
         basic.return_value.play.side_effect = lambda: time.sleep(0.02)
-        thread = threading.Thread(target=self.player.play, args=(self.sound_data,))
-        thread.start()
+        threading.Thread(target=self.player.play, args=(self.sound_data,)).start()
         time.sleep(0.01)
         self.assertFalse(self.player.play(self.sound_data))
 
     @mock.patch("sound.basic.Basic")
     def test_stop_calls_player_stop(self, basic):
-        self.player.play(self.sound_data)
+        basic.return_value.play.side_effect = lambda: time.sleep(0.01)
+        threading.Thread(target=self.player.play, args=(self.sound_data,)).start()
         self.player.stop()
         basic.return_value.stop.assert_called_once()
 
@@ -47,4 +47,4 @@ class PlayerTest(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(PlayerTest, self).__init__(*args, **kwargs)
         self.player = Player()
-        self.sound_data = {"type": "basic", "track": "song-short.wav"}
+        self.sound_data = {"type": "basic", "track": "sound/tracks/song-short.wav"}

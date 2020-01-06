@@ -4,12 +4,16 @@ import unittest.mock as mock
 
 import sound.basic
 
+
+# Variales for tests
 _width = 1
 _channels = 2
 _frame_rate = 44100
 _format = 32
 _length = 100
 _small_chunks = 1
+_wav_file = "sound/tracks/song.wav"
+_mp3_file = "sound/tracks/song.mp3"
 
 
 def create_audio_mock(
@@ -23,9 +27,9 @@ def create_audio_mock(
     return audio_mock
 
 
-def async_play(pydub_mock, length=_length, track="sound/tracks/song.wav"):
+def async_play(pydub_mock, length=_length, track=_wav_file):
     pydub_mock.from_wav = create_audio_mock(length=length)
-    basic = sound.basic.Basic("sound/tracks/song.wav")
+    basic = sound.basic.Basic(_wav_file)
     sound_thread = threading.Thread(target=basic.play, args=[_small_chunks])
     sound_thread.start()
     return basic, sound_thread
@@ -40,12 +44,12 @@ class BasicTest(unittest.TestCase):
         )
 
     def test_can_load_a_wav_file(self, pydub_mock, _):
-        sound.basic.Basic("sound/tracks/song.wav")
+        sound.basic.Basic(_wav_file)
         pydub_mock.from_wav.assert_called_once()
 
     def test_can_open_stream_with_file_parameters(self, pydub_mock, pyaudio_mock):
         pydub_mock.from_wav = create_audio_mock(_width, _channels, _frame_rate)
-        sound.basic.Basic("sound/tracks/song.wav")
+        sound.basic.Basic(_wav_file)
         pyaudio_mock.return_value.open.assert_called_with(
             format=pyaudio_mock().get_format_from_width(_width),
             channels=_channels,
@@ -55,7 +59,7 @@ class BasicTest(unittest.TestCase):
 
     def test_full_buffer_written_to_stream(self, pydub_mock, _):
         pydub_mock.from_wav = create_audio_mock(length=_length)
-        basic = sound.basic.Basic("sound/tracks/song.wav")
+        basic = sound.basic.Basic(_wav_file)
         basic.play(_small_chunks)
         for i in range(_length):
             self.assertEquals(
@@ -88,3 +92,7 @@ class BasicTest(unittest.TestCase):
         self.assertGreater(
             pyaudio_mock.return_value.open.return_value.write.call_count, _length
         )
+
+    def test_can_load_an_mp3_file(self, pydub_mock, _):
+        sound.basic.Basic(_mp3_file)
+        pydub_mock.from_mp3.assert_called_once()

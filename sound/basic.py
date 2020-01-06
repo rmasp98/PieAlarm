@@ -4,33 +4,61 @@ import filetype
 
 
 class Basic:
+    """Basic Sound
+
+    Class to load and process a single audio file. This should only be
+    used by the Player class or other sound classes.
+    """
+
     def __init__(self, file_path):
         self._pause = False
         self._track_pos = 0
         self._track = self._load_file(file_path)
-        self._stream = pyaudio.PyAudio().open(
-            format=pyaudio.PyAudio().get_format_from_width(self._track.sample_width),
-            channels=self._track.channels,
-            rate=self._track.frame_rate,
-            output=True,
-        )
+        self._stream = self._open_stream()
+
+    def close(self):
+        """Stops and closes stream. Should be run when this class is no
+        longer required.
+        """
+        self._stream.stop_stream()
+        self._stream.close()
+
+    def play(self, chunk_size=100):
+        """Start playback of track. chunk_size defines chunks in milliseconds
+        that are written to stream. The is a balance of responsiveness to
+        CPU consumption
+        """
+        self._pause = False
+        self._write_to_stream(chunk_size)
+
+    def pause(self):
+        """Pause track. Playback will continue from where it stopped"""
+        self._pause = True
+
+    def stop(self):
+        """Stop track. Playback will start from beginning"""
+        self._pause = True
+        self._track_pos = 0
 
     def _load_file(self, file_path):
         file_type = filetype.guess(file_path)
         if file_type is not None:
             if file_type.mime == "audio/x-wav":
                 return pydub.AudioSegment.from_wav(file_path)
+            if file_type.mime == "audio/mpeg":
+                return pydub.AudioSegment.from_mp3(file_path)
         raise ValueError("File format not recognised. Please check " + file_path)
 
-    def close(self):
-        self._stream.stop_stream()
-        self._stream.close()
+    def _open_stream(self):
+        pa = pyaudio.PyAudio()
+        return pa.open(
+            format=pa.get_format_from_width(self._track.sample_width),
+            channels=self._track.channels,
+            rate=self._track.frame_rate,
+            output=True,
+        )
 
-    def __del__(self):
-        self.close()
-
-    def play(self, chunk_size=1000):
-        self._pause = False
+    def _write_to_stream(self, chunk_size):
         while self._track_pos < len(self._track):
             if self._pause:
                 return
@@ -39,10 +67,3 @@ class Basic:
                 end_pos = len(self._track)
             self._stream.write(self._track[self._track_pos : end_pos].raw_data)
             self._track_pos = self._track_pos + chunk_size
-
-    def pause(self):
-        self._pause = True
-
-    def stop(self):
-        self._pause = True
-        self._track_pos = 0
