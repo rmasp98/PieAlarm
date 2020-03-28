@@ -1,7 +1,9 @@
 .venv/
+.env
 .vscode/
 __pycache__/
 .noseids
 nosetests.xml
 *.pyc
 Disney/
+api_key

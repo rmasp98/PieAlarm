@@ -1,6 +1,6 @@
 import collections
 import PyQt5.QtWidgets
-from PyQt5.QtGui import QFontDatabase
+import PyQt5.QtGui
 import PyQt5.QtCore
 
 import ui.window
@@ -14,10 +14,13 @@ import alarm.ui.snooze as AlarmSnooze
 
 class UiController:
     class _UiController:
-        def __init__(self, screen="main", theme="default"):
+        def __init__(self, screen, theme):
             self._app = PyQt5.QtWidgets.QApplication([])
             self._window = ui.window.Window()
-            QFontDatabase.addApplicationFont("fonts/square_sans_serif_7.ttf")
+            PyQt5.QtGui.QFontDatabase.addApplicationFont(
+                "ui/fonts/square_sans_serif_7.ttf"
+            )
+
             self._alarm_manager = alarm.manager.Manager()
             self._screen_signal = ScreenSignal(self._set_screen)
             self._screen = ""
@@ -31,8 +34,8 @@ class UiController:
             self._window.set_theme(theme)
 
         def set_screen(self, screen, append_last_screen=True, edit_alarm=None):
-            if edit_alarm is not None:
-                self._alarm_manager.set_focused_alarm(edit_alarm)
+            # if edit_alarm is not None:
+            self._alarm_manager.set_focused_alarm(edit_alarm)
             self._screen_signal.emit(screen, append_last_screen)
 
         def enable_toolbar_edit(self, enable, save_event, delete_event):

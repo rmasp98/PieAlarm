@@ -74,7 +74,6 @@ class _PlaybackCombo(PyQt5.QtWidgets.QWidget):
 
     def set_value(self, value):
         index = self._combo.findText(value)
-        print(index, value)
         if index != -1:
             self._combo.setCurrentIndex(index)
 

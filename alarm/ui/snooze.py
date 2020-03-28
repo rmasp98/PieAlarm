@@ -1,6 +1,7 @@
 import PyQt5.QtWidgets
 
 import utils.layout
+import utils.qtext
 
 
 class SnoozeScreen(PyQt5.QtWidgets.QWidget):
@@ -16,7 +17,7 @@ class SnoozeScreen(PyQt5.QtWidgets.QWidget):
         snooze.mouseReleaseEvent = self._snooze_event
         layout.addWidget(snooze)
 
-        stop = PyQt5.QtWidgets.QLabel("Stop")
+        stop = utils.qtext.QText("Stop")
         stop.mouseReleaseEvent = self._stop_event
         layout.addWidget(stop)
 
@@ -27,5 +28,5 @@ class SnoozeScreen(PyQt5.QtWidgets.QWidget):
         self._alarm_manager.stop()
 
 
-class SnoozeWidget(PyQt5.QtWidgets.QLabel):
+class SnoozeWidget(utils.qtext.QText):
     pass

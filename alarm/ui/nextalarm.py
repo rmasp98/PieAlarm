@@ -3,9 +3,10 @@ import PyQt5.QtWidgets
 
 import ui.controller
 import alarm.alarm
+import utils.qtext
 
 
-class NextAlarm(PyQt5.QtWidgets.QLabel):
+class NextAlarm(utils.qtext.QText):
     def __init__(self, time, parent=None):
         super(NextAlarm, self).__init__(parent)
         self.set_time(time)

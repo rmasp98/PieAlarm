@@ -6,6 +6,7 @@ import ui.controller
 import alarm.alarm
 import alarm.ui.days
 import utils.layout
+import utils.qtext
 
 
 class ViewScreen(PyQt5.QtWidgets.QWidget):
@@ -50,7 +51,7 @@ class AlarmWidget(PyQt5.QtWidgets.QWidget):
 
         layout = utils.layout.create_vertical_layout(self)
         layout.addWidget(create_time(view_alarm.time(), active))
-        layout.addWidget(alarm.ui.days.DaysWidget(view_alarm))
+        layout.addWidget(alarm.ui.days.DaysWidget(view_alarm.active_days()))
 
     def _click_event(self, _):
         ui.controller.UiController().set_screen("alarm_edit", edit_alarm=self._alarm)
@@ -62,7 +63,7 @@ def create_time(time, active):
     return time_label
 
 
-class AddWidget(PyQt5.QtWidgets.QLabel):
+class AddWidget(utils.qtext.QText):
     def __init__(self, parent=None):
         super(AddWidget, self).__init__(parent)
         pixmap = PyQt5.QtGui.QPixmap("ui/icons/add.png")
@@ -71,9 +72,10 @@ class AddWidget(PyQt5.QtWidgets.QLabel):
 
 
 def _click_event(_):
-    new_alarm = alarm.alarm.Alarm(0, 0, [], None, True)
-    ui.controller.UiController().set_screen("alarm_edit", edit_alarm=new_alarm)
+    # new_alarm = alarm.alarm.Alarm(0, 0, [], None, True)
+    # ui.controller.UiController().set_screen("alarm_edit", edit_alarm=new_alarm)
+    ui.controller.UiController().set_screen("alarm_edit", edit_alarm=None)
 
 
-class TimeWidget(PyQt5.QtWidgets.QLabel):
+class TimeWidget(utils.qtext.QText):
     pass

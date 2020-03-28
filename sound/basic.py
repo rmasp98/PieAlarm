@@ -1,3 +1,5 @@
+import os.path
+
 import pyaudio
 import pydub
 import filetype
@@ -15,6 +17,12 @@ class Basic:
         self._track_pos = 0
         self._track = self._load_file(file_path)
         self._stream = self._open_stream()
+
+    @classmethod
+    def verify_sound_data(cls, sound_data):
+        if "track" in sound_data and os.path.exists(sound_data["track"]):
+            return True
+        return False
 
     def close(self):
         """Stops and closes stream. Should be run when this class is no

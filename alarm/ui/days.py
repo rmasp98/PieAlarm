@@ -2,18 +2,20 @@ import PyQt5.QtWidgets
 import PyQt5.QtCore
 
 import utils.layout
+import utils.qtext
 import alarm.alarm
 
 
 class DaysWidget(PyQt5.QtWidgets.QWidget):
-    def __init__(self, days_alarm, clickable=False, parent=None):
+    def __init__(self, days, clickable=False, parent=None):
         super(DaysWidget, self).__init__(parent)
         layout = utils.layout.create_horizontal_layout(self)
 
         self._days = {}
         for day in alarm.alarm.Alarm.Weekdays:
             day_widget = DayLabel(day[:3], clickable)
-            day_widget.set_active(days_alarm.is_day_active(day))
+            if day in days:
+                day_widget.set_active(True)
             layout.addWidget(day_widget)
             self._days[day] = day_widget
 
@@ -25,7 +27,7 @@ class DaysWidget(PyQt5.QtWidgets.QWidget):
         return return_days
 
 
-class DayLabel(PyQt5.QtWidgets.QLabel):
+class DayLabel(utils.qtext.QText):
     def __init__(self, text, clickable=False, parent=None):
         super(DayLabel, self).__init__(text, parent)
         self.setSizePolicy(

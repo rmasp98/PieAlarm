@@ -1,3 +1,5 @@
+import datetime
+
 import PyQt5.QtWidgets
 
 import alarm.alarm
@@ -14,32 +16,45 @@ class EditScreen(PyQt5.QtWidgets.QWidget):
         super(EditScreen, self).__init__(parent)
 
         self._alarm_manager = alarm_manager
-        self._alarm = alarm_manager.get_focused_alarm()
+        self._edit_alarm = alarm_manager.get_focused_alarm()
 
-        self._set_layout(utils.layout.create_vertical_layout(self))
+        if self._edit_alarm is not None:
+            self._set_layout(
+                utils.layout.create_vertical_layout(self),
+                self._edit_alarm.time(),
+                self._edit_alarm.active_days(),
+                self._edit_alarm.is_active(),
+                self._edit_alarm.playback(),
+            )
+        else:
+            self._set_layout(
+                utils.layout.create_vertical_layout(self),
+                datetime.time(0, 0),
+                {},
+                True,
+                None,
+            )
         ui.controller.UiController().enable_toolbar_edit(True, self._save, self._delete)
 
-    def _set_layout(self, layout):
+    def _set_layout(self, layout, time, days, active, playback):
         h_widget = PyQt5.QtWidgets.QWidget()
         # TODO: bodge to get size right but still looks a bit shit
         h_widget.setMinimumHeight(200)
         h_layout = utils.layout.create_horizontal_layout(h_widget, layout)
-        self._time_widget = alarm.ui.time.TimeEdit(
-            self._alarm.time().hour, self._alarm.time().minute
-        )
+        self._time_widget = alarm.ui.time.TimeEdit(time.hour, time.minute)
         h_layout.addWidget(self._time_widget)
 
-        self._active_switch = ui.widgets.toggle.ToggleSwitch(self._alarm.is_active())
+        self._active_switch = ui.widgets.toggle.ToggleSwitch(active)
         h_layout.addWidget(self._active_switch)
 
-        self._days_widget = alarm.ui.days.DaysWidget(self._alarm, True)
+        self._days_widget = alarm.ui.days.DaysWidget(days, True)
         layout.addWidget(self._days_widget)
 
-        self._playback = alarm.ui.playback.PlaybackWidget(self._alarm.playback())
+        self._playback = alarm.ui.playback.PlaybackWidget(playback)
         layout.addWidget(self._playback)
 
     def _save(self, _):
-        if self._days_widget.get_active_days():
+        try:
             hour, minute = self._time_widget.get_time()
             new_alarm = alarm.alarm.Alarm(
                 hour,
@@ -48,20 +63,20 @@ class EditScreen(PyQt5.QtWidgets.QWidget):
                 self._playback.get_playback(),
                 self._active_switch.is_active(),
             )
-            self._alarm_manager.remove_alarm(self._alarm)
+            self._alarm_manager.remove_alarm(self._edit_alarm)
             self._alarm_manager.create_alarm(new_alarm)
             ui.controller.UiController().set_screen("back")
-        else:
-            _day_message()
+        except Exception as err:
+            _day_message(str(err))
 
     def _delete(self, _):
-        self._alarm_manager.remove_alarm(self._alarm)
+        self._alarm_manager.remove_alarm(self._edit_alarm)
         ui.controller.UiController().set_screen("back")
 
 
-def _day_message():
+def _day_message(message):
     msg = PyQt5.QtWidgets.QMessageBox()
     msg.setIcon(PyQt5.QtWidgets.QMessageBox.Warning)
-    msg.setText("Must select at least one day")
+    msg.setText(message)
     msg.setStandardButtons(PyQt5.QtWidgets.QMessageBox.Ok)
     msg.exec_()

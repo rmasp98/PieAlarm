@@ -1,12 +1,12 @@
 import time
 import threading
 
-from PyQt5.QtWidgets import QWidget, QSizePolicy
-from PyQt5.QtGui import QPainter
-from PyQt5.QtCore import QSize, QRect, Qt
+import PyQt5.QtWidgets
+import PyQt5.QtGui
+import PyQt5.QtCore
 
 
-class Spinner(QWidget):
+class Spinner(PyQt5.QtWidgets.QWidget):
     def __init__(self, minimum=0, maximum=100, start=0, parent=None):
         if minimum > maximum or not minimum <= start < maximum:
             raise ValueError(
@@ -14,7 +14,10 @@ class Spinner(QWidget):
             )
 
         super(Spinner, self).__init__(parent)
-        self.setSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
+        self.setSizePolicy(
+            PyQt5.QtWidgets.QSizePolicy.MinimumExpanding,
+            PyQt5.QtWidgets.QSizePolicy.MinimumExpanding,
+        )
         self._offset = 0
         self._spacing = 200
         self._drag_start = self._true_drag_start = 0
@@ -30,10 +33,10 @@ class Spinner(QWidget):
         return self._value
 
     def sizeHint(self):
-        return QSize(250, 150)
+        return PyQt5.QtCore.QSize(250, 150)
 
     def minimumSizeHint(self):
-        return QSize(250, 150)
+        return PyQt5.QtCore.QSize(250, 150)
 
     def mousePressEvent(self, e):
         self._timer = time.time()
@@ -52,7 +55,7 @@ class Spinner(QWidget):
         threading.Thread(target=self._decelerate).start()
 
     def paintEvent(self, _):
-        painter = QPainter(self)
+        painter = PyQt5.QtGui.QPainter(self)
 
         num_values = self._get_num_rendered_values()
 
@@ -61,7 +64,7 @@ class Spinner(QWidget):
         start_pos = centre - self._spacing * int(num_values / 2)
 
         for i in range(num_values):
-            rect = QRect(
+            rect = PyQt5.QtCore.QRect(
                 int(painter.device().width() / 2) - (self.width() / 2),
                 start_pos + i * self._spacing + self._offset,
                 self.width(),
@@ -70,7 +73,7 @@ class Spinner(QWidget):
             # TODO: format should be based on size of maximum and minimum
             painter.drawText(
                 rect,
-                Qt.AlignCenter,
+                PyQt5.QtCore.Qt.AlignCenter,
                 "{:0>2d}".format(
                     self._get_bounded_value(self._value - int(num_values / 2) + i)
                 ),

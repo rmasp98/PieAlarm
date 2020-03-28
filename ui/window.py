@@ -1,10 +1,10 @@
-from PyQt5.QtWidgets import QMainWindow
+import PyQt5.QtWidgets
 
 import ui.main.screen as MainUI
 import ui.toolbar
 
 
-class Window(QMainWindow):
+class Window(PyQt5.QtWidgets.QMainWindow):
     def __init__(self, theme="default", parent=None):
         super(Window, self).__init__(parent)
         self.setFixedSize(800, 480)
@@ -21,11 +21,9 @@ class Window(QMainWindow):
         self.setProperty("theme", theme)
         self.setStyle(self.style())
         self._theme = theme
-        self._disable_weather()
 
     def set_central_widget(self, widget):
         self.setCentralWidget(widget)
-        self._disable_weather()
 
     def enable_toolbar_edit(self, enable, save_event, delete_event):
         self._toolbar.enable_edit(enable, save_event, delete_event)

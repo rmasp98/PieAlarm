@@ -13,6 +13,15 @@ def create_grid_layout(widget, parent=None):
     return _create_layout(PyQt5.QtWidgets.QGridLayout(), widget, parent)
 
 
+def create_spacer():
+    return PyQt5.QtWidgets.QSpacerItem(
+        0,
+        0,
+        PyQt5.QtWidgets.QSizePolicy.MinimumExpanding,
+        # PyQt5.QtWidgets.QSizePolicy.Minimum,
+    )
+
+
 def _create_layout(layout, widget, parent):
     widget.setLayout(layout)
     if parent is not None:

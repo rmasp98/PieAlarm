@@ -3,16 +3,22 @@ import time
 import unittest
 import unittest.mock as mock
 
-from sound.player import Player
+import sound.player
 
 
 class PlayerTest(unittest.TestCase):
+    def test_verify_returns_false_if_no_type(self):
+        sound_data = {}
+        self.assertFalse(sound.player.Player.verify_sound_data(sound_data))
+
+    @mock.patch("sound.basic.Basic")
+    def test_verify_call_basic_verify_if_type_basic(self, basic):
+        sound_data = {"type": "basic"}
+        sound.player.Player.verify_sound_data(sound_data)
+        basic.verify_sound_data.assert_called_once()
+
     def test_playback_fails_if_type_not_provided(self):
         self.assertFalse(self.player.play({}))
-
-    def test_playback_fails_if_type_basic_but_no_track(self):
-        sound_data = {"type": "basic"}
-        self.assertFalse(self.player.play(sound_data))
 
     @mock.patch("sound.basic.Basic")
     def test_creates_basic_object_when_selected(self, basic):
@@ -46,5 +52,5 @@ class PlayerTest(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(PlayerTest, self).__init__(*args, **kwargs)
-        self.player = Player()
+        self.player = sound.player.Player()
         self.sound_data = {"type": "basic", "track": "sound/tracks/song-short.wav"}

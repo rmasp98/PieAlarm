@@ -96,3 +96,16 @@ class BasicTest(unittest.TestCase):
     def test_can_load_an_mp3_file(self, pydub_mock, _):
         sound.basic.Basic(_mp3_file)
         pydub_mock.from_mp3.assert_called_once()
+
+    def test_verify_passes_if_valid_basic_sound_data(self, _, __):
+        sound_data = {"type": "basic", "track": "sound/tracks/song-short.wav"}
+        self.assertTrue(sound.basic.Basic.verify_sound_data(sound_data))
+
+    def test_verify_fails_if_no_track(self, _, __):
+        sound_data = {"type": "basic"}
+        self.assertFalse(sound.basic.Basic.verify_sound_data(sound_data))
+
+    def test_verify_fails_if_provided_track_does_not_exist(self, _, __):
+        sound_data = {"type": "basic", "track": "nofile"}
+        self.assertFalse(sound.basic.Basic.verify_sound_data(sound_data))
+

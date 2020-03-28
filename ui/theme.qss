@@ -6,15 +6,24 @@ QMainWindow[theme=dark] {
   background-color: black
 } 
 
+/* QWidget {
+  border: 2px solid white;
+} */
+
+
 QToolBar {
-  background: transparent;
+  background: rgba(0, 0, 0, 100);
+  /* background: transparent; */
   border: transparent;
 }
 
 QLabel {
+  qproperty-alignment: 'AlignHCenter | AlignVCenter';
+}
+
+QText {
+  background-color: rgba(0, 0, 0, 100);
   color: white;
-  font: "square_sans_serif_7";
-  qproperty-alignment: 'AlignCenter | AlignCenter';
 }
 
 /* Make Scrollbar area transparent */
@@ -22,12 +31,8 @@ QScrollArea { background: transparent }
 QScrollArea > QWidget > QWidget { background: transparent }
 QScrollArea > QWidget > QScrollBar { background: palette(base); }
 
-DigitalClock {
-  font-size: 200px;
-}
-
-AlarmWidget {
-  background-color: blue
+DigitalClock > QLabel {
+  font-size: 150px;
 }
 
 NextAlarm {
@@ -106,4 +111,8 @@ QComboBox {
 QComboBox QAbstractItemView {
   background: #000000;
   border: none;
+}
+
+Icon {
+  color: white;
 }
