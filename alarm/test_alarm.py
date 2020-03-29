@@ -54,7 +54,7 @@ def create_alarm(
     hour=0,
     minute=0,
     days=["Monday"],
-    playback={"type": "basic", "track": "sound/tracks/song-short.wav"},
+    playback={"type": "basic", "track": "sound/tracks/song.mp3"},
     active=True,
 ):
     return alarm.alarm.Alarm(hour, minute, days, playback, active)

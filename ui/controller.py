@@ -4,12 +4,12 @@ import PyQt5.QtGui
 import PyQt5.QtCore
 
 import ui.window
-import ui.main.screen as MainUI
+import ui.home.home as Home
 import alarm.manager
 import alarm.alarm
-import alarm.ui.view as AlarmView
-import alarm.ui.edit as AlarmEdit
-import alarm.ui.snooze as AlarmSnooze
+import ui.alarm.view as AlarmView
+import ui.alarm.edit as AlarmEdit
+import ui.alarm.snooze as AlarmSnooze
 
 
 class UiController:
@@ -79,7 +79,7 @@ class ScreenSignal(PyQt5.QtCore.QObject):
 
 
 screens = {
-    "main": MainUI.Screen,
+    "main": Home.HomeScreen,
     "alarm_edit": AlarmEdit.EditScreen,
     "alarm_view": AlarmView.ViewScreen,
     "snooze": AlarmSnooze.SnoozeScreen,

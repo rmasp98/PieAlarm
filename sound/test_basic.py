@@ -12,7 +12,7 @@ _frame_rate = 44100
 _format = 32
 _length = 100
 _small_chunks = 1
-_wav_file = "sound/tracks/song.wav"
+_wav_file = "sound/tracks/waterfall.wav"
 _mp3_file = "sound/tracks/song.mp3"
 
 
@@ -98,7 +98,7 @@ class BasicTest(unittest.TestCase):
         pydub_mock.from_mp3.assert_called_once()
 
     def test_verify_passes_if_valid_basic_sound_data(self, _, __):
-        sound_data = {"type": "basic", "track": "sound/tracks/song-short.wav"}
+        sound_data = {"type": "basic", "track": "sound/tracks/song.mp3"}
         self.assertTrue(sound.basic.Basic.verify_sound_data(sound_data))
 
     def test_verify_fails_if_no_track(self, _, __):
@@ -108,4 +108,3 @@ class BasicTest(unittest.TestCase):
     def test_verify_fails_if_provided_track_does_not_exist(self, _, __):
         sound_data = {"type": "basic", "track": "nofile"}
         self.assertFalse(sound.basic.Basic.verify_sound_data(sound_data))
-

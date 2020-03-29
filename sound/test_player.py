@@ -50,7 +50,19 @@ class PlayerTest(unittest.TestCase):
         self.player.stop()
         self.assertTrue(self.player.play(self.sound_data))
 
+    @mock.patch("sound.playlist.Playlist")
+    def test_verify_call_playlist_verify_if_type_basic(self, playlist):
+        sound_data = {"type": "playlist"}
+        sound.player.Player.verify_sound_data(sound_data)
+        playlist.verify_sound_data.assert_called_once()
+
+    @mock.patch("sound.playlist.Playlist")
+    def test_play_playlist_when_selected(self, playlist):
+        sound_data = {"type": "playlist", "playlist": "basic"}
+        self.player.play(sound_data)
+        playlist.return_value.play.assert_called_once()
+
     def __init__(self, *args, **kwargs):
         super(PlayerTest, self).__init__(*args, **kwargs)
         self.player = sound.player.Player()
-        self.sound_data = {"type": "basic", "track": "sound/tracks/song-short.wav"}
+        self.sound_data = {"type": "basic", "track": "sound/tracks/song.mp3"}

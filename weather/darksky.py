@@ -26,10 +26,10 @@ class DarkskyWeather:
     def __init__(
         self,
         base_url="https://api.darksky.net/forecast/",
-        api_key="dc43020434b8d559c58a86e9b4646d31",
+        api_key=open("api_key", "r").read().strip("\x0A"),
     ):
         self._base_url = base_url
-        self._api_key = open("api_key", "r").read().strip("\x0A")
+        self._api_key = api_key
 
     def get_weather(self, location, options=default_options):
         response = requests.get(
@@ -48,7 +48,7 @@ class DarkskyWeather:
             ] = weather.weather.TimeData(
                 temp=data["temperature"],
                 feel_temp=data["apparentTemperature"],
-                w_type=icons[data["icon"]],
+                w_type=self._get_icon(data["icon"]),
                 precip=data["precipProbability"],
                 wind_dir=self._get_compass_direction(data["windBearing"]),
                 wind_speed=data["windSpeed"],
@@ -74,3 +74,8 @@ class DarkskyWeather:
             if bearing > middle - offset and bearing < middle + offset:
                 return compass[i]
         return compass[0]
+
+    def _get_icon(self, icon):
+        if icons[icon] > 0 and icons[icon] < len(icons) + 1:
+            return icons[icon]
+        return 0

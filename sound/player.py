@@ -1,4 +1,5 @@
 import sound.basic
+import sound.playlist
 
 
 # Playlist
@@ -27,6 +28,8 @@ class Player:
         if "type" in sound_data:
             if sound_data["type"] == "basic":
                 return sound.basic.Basic.verify_sound_data(sound_data)
+            if sound_data["type"] == "playlist":
+                return sound.playlist.Playlist.verify_sound_data(sound_data)
         return False
 
     def play(self, sound_data):
@@ -52,3 +55,5 @@ class Player:
         if self.verify_sound_data(sound_data):
             if sound_data["type"] == "basic":
                 return sound.basic.Basic(sound_data["track"])
+            if sound_data["type"] == "playlist":
+                return sound.playlist.Playlist(sound_data["playlist"])

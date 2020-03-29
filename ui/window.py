@@ -1,6 +1,5 @@
 import PyQt5.QtWidgets
 
-import ui.main.screen as MainUI
 import ui.toolbar
 
 
@@ -27,11 +26,3 @@ class Window(PyQt5.QtWidgets.QMainWindow):
 
     def enable_toolbar_edit(self, enable, save_event, delete_event):
         self._toolbar.enable_edit(enable, save_event, delete_event)
-
-    def _disable_weather(self):
-        main_screen = self.findChild(MainUI.Screen)
-        if main_screen is not None:
-            if self._theme == "dark":
-                main_screen.show_weather(False)
-            else:
-                main_screen.show_weather(True)
