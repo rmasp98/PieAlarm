@@ -35,7 +35,7 @@ DigitalClock {
   font-size: 150px;
 }
 
-NextAlarm {
+NextAlarm > QText {
   font-size: 35px;
 }
 

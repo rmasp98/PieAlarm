@@ -1,4 +1,5 @@
 import PyQt5.QtWidgets
+import PyQt5.QtCore
 
 import ui.toolbar
 
@@ -8,7 +9,7 @@ class Window(PyQt5.QtWidgets.QMainWindow):
         super(Window, self).__init__(parent)
         self.setFixedSize(800, 480)
         # self.showFullScreen()
-        # self.setCursor(Qt.BlankCursor)
+        self.setCursor(PyQt5.QtCore.Qt.BlankCursor)
         self.setProperty("theme", "default")
         self.setStyleSheet(open("ui/theme.qss").read())
         self._theme = theme

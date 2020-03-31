@@ -30,7 +30,7 @@ class Icon(PyQt5.QtWidgets.QWidget):
         self._size = size
 
     def sizeHint(self):
-        return PyQt5.QtCore.QSize(self._size, self._size + 10)
+        return PyQt5.QtCore.QSize(self._size, self._size + 20)
 
     def update(self, image, temp, time):
         self._image = icons[image]
@@ -39,6 +39,7 @@ class Icon(PyQt5.QtWidgets.QWidget):
 
     def paintEvent(self, _):
         painter = PyQt5.QtGui.QPainter(self)
+
         image_rect = PyQt5.QtCore.QRect(0, 0, self._size, self._size)
         image = PyQt5.QtGui.QImage()
         image.load(self._image)
