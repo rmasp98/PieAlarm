@@ -16,7 +16,7 @@ class ToolBar(PyQt5.QtWidgets.QToolBar):
         tb_widget.setLayout(layout)
 
         layout.addWidget(BackButton())
-        layout.addWidget(LightButton())
+        # layout.addWidget(LightButton())
         layout.addStretch()
         layout.addWidget(SaveButton())
         layout.addWidget(DeleteButton())

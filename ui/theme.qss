@@ -114,6 +114,7 @@ QComboBox QAbstractItemView {
 }
 
 Icon {
+  font-weight: bold;
   font-size: 16px;
   color: white;
 }

@@ -32,10 +32,11 @@ class Icon(PyQt5.QtWidgets.QWidget):
     def sizeHint(self):
         return PyQt5.QtCore.QSize(self._size, self._size + 20)
 
-    def update(self, image, temp, time):
+    def change(self, image, temp, time):
         self._image = icons[image]
         self._temp = int(temp)
         self._time = time.strftime("%-I%p")
+        self.update()
 
     def paintEvent(self, _):
         painter = PyQt5.QtGui.QPainter(self)
@@ -62,7 +63,7 @@ class Widget(PyQt5.QtWidgets.QWidget):
         layout.addWidget(icon)
 
     def update(self, weather, temperature, time):
-        self.findChild(Icon, "icon").update(weather, temperature, time)
+        self.findChild(Icon, "icon").change(weather, temperature, time)
 
 
 class Group(PyQt5.QtWidgets.QWidget):
@@ -77,7 +78,7 @@ class Group(PyQt5.QtWidgets.QWidget):
 
         timer = PyQt5.QtCore.QTimer(self)
         timer.timeout.connect(self.update_all)
-        timer.start(900000)
+        timer.start(9000)
         self.update_all()
 
     def update_all(self):
