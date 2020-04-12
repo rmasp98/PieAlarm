@@ -28,16 +28,19 @@ class Playlist:
         self._exit_playback = False
         self._paused = False
         for self._track_index in range(self._track_index, len(self._tracks)):
-            if self._currently_playing is None:
-                self._currently_playing = sound.basic.Basic(
-                    self._tracks[self._track_index]
-                )
-            self._currently_playing.play(chunk_size)
-            if not self._paused:
-                self._currently_playing.close()
-                self._currently_playing = None
-            if self._exit_playback:
-                return
+            if sound.basic.Basic.verify_sound_data(
+                {"type": "basic", "track": self._tracks[self._track_index]}
+            ):
+                if self._currently_playing is None:
+                    self._currently_playing = sound.basic.Basic(
+                        self._tracks[self._track_index]
+                    )
+                self._currently_playing.play(chunk_size)
+                if not self._paused:
+                    self._currently_playing.close()
+                    self._currently_playing = None
+                if self._exit_playback:
+                    return
 
     def pause(self):
         self._exit_playback = True

@@ -3,7 +3,6 @@ import PyQt5.QtWidgets
 import ui.home.homeweather
 import ui.home.nextalarm
 import ui.home.clock
-
 import utils.layout
 
 
@@ -15,7 +14,7 @@ class HomeScreen(PyQt5.QtWidgets.QWidget):
     def setup_screen(self, next_alarm):
         vert_layout = utils.layout.create_vertical_layout(self)
         vert_layout.addWidget(ui.home.homeweather.Group())
-        vert_layout.addWidget(ui.home.clock.DigitalClock())
+        vert_layout.addWidget(ui.home.clock.DigitalClock(150))
         vert_layout.addWidget(ui.home.nextalarm.NextAlarm(next_alarm))
 
     def show_weather(self, show):

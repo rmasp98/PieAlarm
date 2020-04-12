@@ -30,7 +30,7 @@ class Icon(PyQt5.QtWidgets.QWidget):
         self._size = size
 
     def sizeHint(self):
-        return PyQt5.QtCore.QSize(self._size, self._size + 20)
+        return PyQt5.QtCore.QSize(self._size, self._size + 25)
 
     def change(self, image, temp, time):
         self._image = icons[image]
@@ -47,7 +47,7 @@ class Icon(PyQt5.QtWidgets.QWidget):
         painter.drawImage(image_rect, image)
         painter.drawText(image_rect, PyQt5.QtCore.Qt.AlignCenter, str(self._temp))
 
-        time_rect = PyQt5.QtCore.QRect(0, self._size, self._size, 20)
+        time_rect = PyQt5.QtCore.QRect(0, self._size, self._size, 25)
         painter.drawText(time_rect, PyQt5.QtCore.Qt.AlignCenter, self._time)
 
         painter.end()
@@ -58,7 +58,7 @@ class Widget(PyQt5.QtWidgets.QWidget):
         super(Widget, self).__init__(parent)
         layout = utils.layout.create_vertical_layout(self)
 
-        icon = Icon(10, 99, datetime.datetime.now(), 75)
+        icon = Icon(10, 99, datetime.datetime.now(), 100)
         icon.setObjectName("icon")
         layout.addWidget(icon)
 
@@ -78,13 +78,17 @@ class Group(PyQt5.QtWidgets.QWidget):
 
         timer = PyQt5.QtCore.QTimer(self)
         timer.timeout.connect(self.update_all)
-        timer.start(9000)
+        timer.start(900000)
         self.update_all()
 
     def update_all(self):
-        updates = weather.darksky.DarkskyWeather().get_weather("Guildford").data
-        for widget, key in zip(self.findChildren(Widget), sorted(updates)[0::3]):
-            widget.update(updates[key].w_type, updates[key].feel_temp, key)
+        try:
+            updates = weather.darksky.DarkskyWeather().get_weather("Guildford").data
+            for widget, key in zip(self.findChildren(Widget), sorted(updates)[0::3]):
+                widget.update(updates[key].w_type, updates[key].feel_temp, key)
+        except:
+            for widget in self.findChildren(Widget):
+                widget.update(0, 99, datetime.datetime.now())
 
     def show_weather(self, is_show):
         for weather in self.findChildren(Widget):

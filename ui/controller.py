@@ -41,9 +41,13 @@ class UiController:
         def enable_toolbar_edit(self, enable, save_event, delete_event):
             self._window.enable_toolbar_edit(enable, save_event, delete_event)
 
+        def enable_toolbar_clock(self, enable):
+            self._window.enable_toolbar_clock(enable)
+
         def _set_screen(self, screen, append_back):
             if screen in screens:
                 self.enable_toolbar_edit(False, None, None)
+                self.enable_toolbar_clock(screen != "main")
                 if append_back:
                     self._last_screen.append(self._screen)
                 self._screen = screen

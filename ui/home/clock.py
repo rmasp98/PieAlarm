@@ -1,13 +1,17 @@
 import PyQt5.QtCore
 import PyQt5.QtWidgets
+import PyQt5.QtGui
 
 import utils.qtext
 import utils.layout
 
 
 class DigitalClock(utils.qtext.QText):
-    def __init__(self, parent=None):
+    def __init__(self, font_size, parent=None):
         super(DigitalClock, self).__init__(parent)
+        font = self.font()
+        font.setPixelSize(font_size)
+        self.setFont(font)
 
         timer = PyQt5.QtCore.QTimer(self)
         timer.timeout.connect(self.show_time)

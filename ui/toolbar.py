@@ -4,6 +4,7 @@ import PyQt5.QtGui
 import ui.controller
 import utils.qtext
 import light.light
+import ui.home.clock
 
 
 class ToolBar(PyQt5.QtWidgets.QToolBar):
@@ -16,8 +17,15 @@ class ToolBar(PyQt5.QtWidgets.QToolBar):
         tb_widget.setLayout(layout)
 
         layout.addWidget(BackButton())
-        # layout.addWidget(LightButton())
+        try:
+            layout.addWidget(LightButton())
+        except:
+            print("Could not create light button as no mote device found")
         layout.addStretch()
+
+        layout.addWidget(ui.home.clock.DigitalClock(30))
+        layout.addStretch()
+
         layout.addWidget(SaveButton())
         layout.addWidget(DeleteButton())
         layout.setContentsMargins(0, 0, 0, 0)
@@ -36,6 +44,12 @@ class ToolBar(PyQt5.QtWidgets.QToolBar):
         else:
             self.findChild(SaveButton).hide()
             self.findChild(DeleteButton).hide()
+
+    def enable_clock(self, enable):
+        if enable:
+            self.findChild(ui.home.clock.DigitalClock).show()
+        else:
+            self.findChild(ui.home.clock.DigitalClock).hide()
 
 
 class BackButton(PyQt5.QtWidgets.QLabel):

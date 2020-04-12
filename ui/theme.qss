@@ -31,10 +31,6 @@ QScrollArea { background: transparent }
 QScrollArea > QWidget > QWidget { background: transparent }
 QScrollArea > QWidget > QScrollBar { background: palette(base); }
 
-DigitalClock {
-  font-size: 150px;
-}
-
 NextAlarm > QText {
   font-size: 35px;
 }
@@ -91,6 +87,25 @@ ToggleSwitch::handle:horizontal {
     border-radius: 15px;
 }
 
+Slider {
+    min-width: 400px;
+    max-width: 400px;
+    height: 60px;
+}
+
+Slider::groove:horizontal {
+    background: #f26d6d;
+    height: 50px;
+    border-radius: 15px;
+}
+
+Slider::handle:horizontal {
+    background: white;
+    width: 50px;
+    border-radius: 15px;
+}
+
+
 QCheckBox {
   color: white;
 }
@@ -115,6 +130,6 @@ QComboBox QAbstractItemView {
 
 Icon {
   font-weight: bold;
-  font-size: 16px;
+  font-size: 25px;
   color: white;
 }

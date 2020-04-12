@@ -10,7 +10,7 @@ Different moduels needed
 
 
 TODO:
-  - Weather pulled down from various sites
+  - Slider for stop alarm
   - Changeable background image
   - Dark theme
   - Light sensor to switch to dark theme at night after small timeout
@@ -25,7 +25,7 @@ TODO:
   - Alarm challenges
     - To snooze you need to solve a challenge
     - Challenges increase in difficultly more times you snooze starting at easy
-  - Light that could be triggered by alarm and voice
+  - Light that could be triggered by alarm, voice and button
   - Voice controls
     - say "Time" to read out time
     - say "Weather" to give overview of todays weather
@@ -34,4 +34,3 @@ TODO:
   - Subscreens that allow further configuration/interface of application
     - Obviously we will need a settings screen
     - Weather screen to elaborate on weather
-    - Alarms screen to view and configure alarms

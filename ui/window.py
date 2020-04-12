@@ -27,3 +27,6 @@ class Window(PyQt5.QtWidgets.QMainWindow):
 
     def enable_toolbar_edit(self, enable, save_event, delete_event):
         self._toolbar.enable_edit(enable, save_event, delete_event)
+
+    def enable_toolbar_clock(self, enable):
+        self._toolbar.enable_clock(enable)

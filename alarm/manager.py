@@ -28,7 +28,8 @@ class Manager:
         self._scheduler = new_scheduler
         self._player = new_player
         alarm.job.Job.subscribe(self._trigger_alarm)
-        self._snoozed = True
+        self._snoozed = 5
+        self._snooze_time = 10
         self._focused_alarm = None
 
     def reset(self):
@@ -63,13 +64,16 @@ class Manager:
         """Gets the next time (of type datetime) an alarm is set to trigger"""
         return self._scheduler.get_next_job_time()
 
-    def snooze(self):
+    def snooze(self, time):
         """Stop playback and set alarm to trigger again in 10 minutes"""
-        self._player.stop()
+        if self._snoozed > 0:
+            self._snooze_time = time
+            self._snoozed = self._snoozed - 1
+            self._player.stop()
 
     def stop(self):
         """Stop playback and set alarm to trigger on next alarm time"""
-        self._snoozed = False
+        self._snoozed = 0
         self._player.stop()
 
     def set_focused_alarm(self, focused_alarm):
@@ -90,11 +94,13 @@ class Manager:
         if success:
             play_alarm = self._get_alarm_from_uid(uid)
             if play_alarm is not None:
-                self._snoozed = True
                 ui.controller.UiController().set_screen("snooze")
                 if self._player.play(play_alarm.playback()) and self._snoozed:
-                    new_time = datetime.datetime.now() + datetime.timedelta(minutes=10)
+                    new_time = datetime.datetime.now() + datetime.timedelta(
+                        seconds=self._snooze_time
+                    )
                 else:
+                    self._snoozed = 5
                     new_time = play_alarm.find_next_alarm()
                 self._alarms[play_alarm] = self._scheduler.add_job(new_time)
                 ui.controller.UiController().set_screen("back")

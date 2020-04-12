@@ -1,10 +1,10 @@
-from PyQt5.QtWidgets import QSlider
-from PyQt5.QtCore import Qt
+import PyQt5.QtWidgets
+import PyQt5.QtCore
 
 
-class ToggleSwitch(QSlider):
+class ToggleSwitch(PyQt5.QtWidgets.QSlider):
     def __init__(self, active=True, parent=None):
-        super(ToggleSwitch, self).__init__(Qt.Horizontal, parent)
+        super(ToggleSwitch, self).__init__(PyQt5.QtCore.Qt.Horizontal, parent)
         self.setMaximum(1)
         self._toggle(active)
 
