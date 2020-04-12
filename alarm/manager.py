@@ -97,7 +97,7 @@ class Manager:
                 ui.controller.UiController().set_screen("snooze")
                 if self._player.play(play_alarm.playback()) and self._snoozed:
                     new_time = datetime.datetime.now() + datetime.timedelta(
-                        seconds=self._snooze_time
+                        minutes=self._snooze_time
                     )
                 else:
                     self._snoozed = 5

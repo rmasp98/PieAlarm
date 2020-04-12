@@ -12,6 +12,8 @@ class Basic:
     used by the Player class or other sound classes.
     """
 
+    _pa = pyaudio.PyAudio()
+
     def __init__(self, file_path):
         self._pause = False
         self._track_pos = 0
@@ -31,7 +33,7 @@ class Basic:
         self._stream.stop_stream()
         self._stream.close()
 
-    def play(self, chunk_size=100):
+    def play(self, chunk_size=50):
         """Start playback of track. chunk_size defines chunks in milliseconds
         that are written to stream. The is a balance of responsiveness to
         CPU consumption
@@ -58,9 +60,8 @@ class Basic:
         raise ValueError("File format not recognised. Please check " + file_path)
 
     def _open_stream(self):
-        pa = pyaudio.PyAudio()
-        return pa.open(
-            format=pa.get_format_from_width(self._track.sample_width),
+        return self._pa.open(
+            format=self._pa.get_format_from_width(self._track.sample_width),
             channels=self._track.channels,
             rate=self._track.frame_rate,
             output=True,
