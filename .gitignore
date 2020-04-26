@@ -7,3 +7,4 @@ nosetests.xml
 *.pyc
 Disney/
 api_key
+*.log

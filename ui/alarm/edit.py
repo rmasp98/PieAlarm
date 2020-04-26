@@ -3,20 +3,19 @@ import datetime
 import PyQt5.QtWidgets
 
 import alarm.alarm
+import ui
 import ui.alarm.time
 import ui.alarm.days
 import ui.alarm.playback
 import ui.widgets.toggle
-import ui.controller
 import utils.layout
 
 
 class EditScreen(PyQt5.QtWidgets.QWidget):
-    def __init__(self, alarm_manager, parent=None):
+    def __init__(self, alarm, alarm_manager, parent=None):
         super(EditScreen, self).__init__(parent)
-
         self._alarm_manager = alarm_manager
-        self._edit_alarm = alarm_manager.get_focused_alarm()
+        self._edit_alarm = alarm
 
         if self._edit_alarm is not None:
             self._set_layout(
@@ -65,13 +64,13 @@ class EditScreen(PyQt5.QtWidgets.QWidget):
             )
             self._alarm_manager.remove_alarm(self._edit_alarm)
             self._alarm_manager.create_alarm(new_alarm)
-            ui.controller.UiController().set_screen("back")
+            ui.Ctrl().back()
         except Exception as err:
             _day_message(str(err))
 
     def _delete(self, _):
         self._alarm_manager.remove_alarm(self._edit_alarm)
-        ui.controller.UiController().set_screen("back")
+        ui.Ctrl().back()
 
 
 def _day_message(message):

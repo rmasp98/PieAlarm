@@ -35,7 +35,8 @@ def async_play(pydub_mock, length=_length, track=_wav_file):
     return basic, sound_thread
 
 
-@mock.patch("pyaudio.PyAudio")
+# @mock.patch("pyaudio.PyAudio")
+@mock.patch("sound.basic.Basic._pa")
 @mock.patch("pydub.AudioSegment")
 class BasicTest(unittest.TestCase):
     def test_loading_file_fails_on_unrecognised_format(self, _, __):
@@ -50,8 +51,8 @@ class BasicTest(unittest.TestCase):
     def test_can_open_stream_with_file_parameters(self, pydub_mock, pyaudio_mock):
         pydub_mock.from_wav = create_audio_mock(_width, _channels, _frame_rate)
         sound.basic.Basic(_wav_file)
-        pyaudio_mock.return_value.open.assert_called_with(
-            format=pyaudio_mock().get_format_from_width(_width),
+        pyaudio_mock.open.assert_called_with(
+            format=pyaudio_mock.get_format_from_width(_width),
             channels=_channels,
             rate=_frame_rate,
             output=True,
@@ -80,18 +81,14 @@ class BasicTest(unittest.TestCase):
         basic.pause()
         sound_thread.join()
         basic.play(_small_chunks)
-        self.assertEquals(
-            pyaudio_mock.return_value.open.return_value.write.call_count, _length
-        )
+        self.assertEquals(pyaudio_mock.open.return_value.write.call_count, _length)
 
     def test_stop_starts_track_from_beginning(self, pydub_mock, pyaudio_mock):
         basic, sound_thread = async_play(pydub_mock)
         basic.stop()
         sound_thread.join()
         basic.play(_small_chunks)
-        self.assertGreater(
-            pyaudio_mock.return_value.open.return_value.write.call_count, _length
-        )
+        self.assertGreater(pyaudio_mock.open.return_value.write.call_count, _length)
 
     def test_can_load_an_mp3_file(self, pydub_mock, _):
         sound.basic.Basic(_mp3_file)

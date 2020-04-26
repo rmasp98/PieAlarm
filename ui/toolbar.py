@@ -1,5 +1,6 @@
 import PyQt5.QtWidgets
 import PyQt5.QtGui
+import PyQt5.QtCore
 
 import ui.controller
 import utils.qtext
@@ -10,83 +11,52 @@ import ui.home.clock
 class ToolBar(PyQt5.QtWidgets.QToolBar):
     def __init__(self, parent=None):
         super(ToolBar, self).__init__(parent)
-        self.setMaximumHeight(50)
+        self.setIconSize(PyQt5.QtCore.QSize(50, 50))
+        self.setMovable(False)
 
-        layout = PyQt5.QtWidgets.QHBoxLayout()
-        tb_widget = PyQt5.QtWidgets.QWidget()
-        tb_widget.setLayout(layout)
-
-        layout.addWidget(BackButton())
+        self.addAction(PyQt5.QtGui.QIcon("ui/icons/back.png"), "Back", _back_event)
         try:
-            layout.addWidget(LightButton())
+            self._light_on = 0
+            self._light = light.light.Light()
+            self.addAction(
+                PyQt5.QtGui.QIcon("ui/icons/light.png"), "Light", self._light_event
+            )
         except:
             print("Could not create light button as no mote device found")
-        layout.addStretch()
 
-        layout.addWidget(ui.home.clock.DigitalClock(30))
-        layout.addStretch()
+        self.addWidget(StretchWidget())
+        self._clock = self.addWidget(ui.home.clock.DigitalClock(30))
 
-        layout.addWidget(SaveButton())
-        layout.addWidget(DeleteButton())
-        layout.setContentsMargins(0, 0, 0, 0)
-
-        self.setMovable(False)
-        self.addWidget(tb_widget)
-
-        self.enable_edit(False)
+        self.addWidget(StretchWidget())
+        self._save = self.addAction(PyQt5.QtGui.QIcon("ui/icons/save.png"), "Save")
+        self._delete = self.addAction(
+            PyQt5.QtGui.QIcon("ui/icons/delete.png"), "Delete"
+        )
 
     def enable_edit(self, enable, save_event=None, delete_event=None):
-        if enable:
-            self.findChild(SaveButton).show()
-            self.findChild(SaveButton).mouseReleaseEvent = save_event
-            self.findChild(DeleteButton).show()
-            self.findChild(DeleteButton).mouseReleaseEvent = delete_event
-        else:
-            self.findChild(SaveButton).hide()
-            self.findChild(DeleteButton).hide()
+        self._save.setVisible(enable)
+        if save_event is not None:
+            self._save.triggered.connect(save_event)
+
+        self._delete.setVisible(enable)
+        if delete_event is not None:
+            self._delete.triggered.connect(delete_event)
 
     def enable_clock(self, enable):
-        if enable:
-            self.findChild(ui.home.clock.DigitalClock).show()
-        else:
-            self.findChild(ui.home.clock.DigitalClock).hide()
+        self._clock.setVisible(enable)
 
-
-class BackButton(PyQt5.QtWidgets.QLabel):
-    def __init__(self, parent=None):
-        super(BackButton, self).__init__(parent)
-        pixmap = PyQt5.QtGui.QPixmap("ui/icons/back.png")
-        self.setPixmap(pixmap.scaledToWidth(50))
-        self.mouseReleaseEvent = _back_event
-
-
-def _back_event(_):
-    ui.controller.UiController().set_screen("back")
-
-
-class LightButton(PyQt5.QtWidgets.QLabel):
-    def __init__(self, parent=None):
-        super(LightButton, self).__init__(parent)
-        self._light_on = 0
-        self._light = light.light.Light()
-        pixmap = PyQt5.QtGui.QPixmap("ui/icons/light.png")
-        self.setPixmap(pixmap.scaledToWidth(50))
-        self.mouseReleaseEvent = self._light_event
-
-    def _light_event(self, _):
+    def _light_event(self):
         self._light_on = (self._light_on + 1) % 4
         self._light.set_warm(self._light_on / 3)
 
 
-class SaveButton(PyQt5.QtWidgets.QLabel):
+class StretchWidget(PyQt5.QtWidgets.QWidget):
     def __init__(self, parent=None):
-        super(SaveButton, self).__init__(parent)
-        pixmap = PyQt5.QtGui.QPixmap("ui/icons/save.png")
-        self.setPixmap(pixmap.scaledToWidth(40))
+        super(StretchWidget, self).__init__(parent)
+        self.setSizePolicy(
+            PyQt5.QtWidgets.QSizePolicy.Expanding, PyQt5.QtWidgets.QSizePolicy.Expanding
+        )
 
 
-class DeleteButton(PyQt5.QtWidgets.QLabel):
-    def __init__(self, parent=None):
-        super(DeleteButton, self).__init__(parent)
-        pixmap = PyQt5.QtGui.QPixmap("ui/icons/delete.png")
-        self.setPixmap(pixmap.scaledToWidth(40))
+def _back_event():
+    ui.controller.UiController().back()

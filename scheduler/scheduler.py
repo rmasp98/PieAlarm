@@ -1,7 +1,7 @@
 import datetime
 import uuid
 
-import alarm.job
+import scheduler.job
 
 
 class Scheduler:
@@ -15,17 +15,17 @@ class Scheduler:
     def __init__(self):
         self._time = None
         self._jobs = {}
-        alarm.job.Job.subscribe(self._job_complete)
+        scheduler.job.Job.subscribe(self._job_complete)
 
     def get_next_job_time(self):
         """Returns time (as datetime) of soonest job to execute"""
         return self._time
 
-    def add_job(self, time):
+    def add_job(self, time, job_class=scheduler.job.Job):
         """Accepts a datetime object for when job will execute.
         Jobs in past will execute immediately"""
         uid = str(uuid.uuid4())
-        self._jobs[uid] = alarm.job.Job(uid, time)
+        self._jobs[uid] = job_class(uid, time)
         self._update_next_job_time()
         return uid
 

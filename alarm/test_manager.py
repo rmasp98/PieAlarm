@@ -4,7 +4,7 @@ import datetime
 import threading
 import time
 
-from alarm.manager import Manager
+import alarm.manager
 
 # tests
 # Background job to check num jobs == num alarms
@@ -79,7 +79,7 @@ class ManagerTest(unittest.TestCase):
             )  # 8am on Sunday
             self.manager._trigger_alarm(self.uid, True)
             self.scheduler.add_job.assert_called_once_with(
-                datetime.datetime(2019, 7, 21, 8, 10)
+                datetime.datetime(2019, 7, 21, 8, 10), alarm.manager.AlarmJob
             )
 
     @mock.patch("ui.controller.UiController", mock.Mock())
@@ -94,7 +94,9 @@ class ManagerTest(unittest.TestCase):
         time.sleep(0.1)
         self.manager.stop()
         t.join()
-        self.scheduler.add_job.assert_called_once_with(self.alarm.find_next_alarm())
+        self.scheduler.add_job.assert_called_once_with(
+            self.alarm.find_next_alarm(), alarm.manager.AlarmJob
+        )
 
     @mock.patch("ui.controller.UiController", mock.Mock())
     def test_PRIVATE_trigger_alarm_schedules_next_alarm_if_playback_fails(self):
@@ -102,7 +104,9 @@ class ManagerTest(unittest.TestCase):
         self.scheduler.reset_mock()
         self.player.play.return_value = False
         self.manager._trigger_alarm(self.uid, True)
-        self.scheduler.add_job.assert_called_once_with(self.alarm.find_next_alarm())
+        self.scheduler.add_job.assert_called_once_with(
+            self.alarm.find_next_alarm(), alarm.manager.AlarmJob
+        )
 
     @mock.patch("ui.controller.UiController", mock.Mock())
     def test_PRIVATE_rescheduled_alarm_can_be_removed(self):
@@ -126,19 +130,24 @@ class ManagerTest(unittest.TestCase):
         self.manager.snooze(10)
         self.player.stop.assert_called_once()
 
-    def test_snooze_does_nothing_after_five_calls(self):
+    @mock.patch("ui.controller.UiController", mock.Mock())
+    def test_snooze_does_nothing_after_four_calls(self):
+        self.manager.create_alarm(self.alarm)
         for _ in range(6):
             self.manager.snooze(10)
+            self.manager._trigger_alarm(self.uid, True)
         self.assertEqual(self.player.stop.call_count, 5)
 
     @mock.patch("ui.controller.UiController", mock.Mock())
     def test_PRIVATE_trigger_alarm_schedules_next_alarm_after_five_snoozes(self):
         self.manager.create_alarm(self.alarm)
-        self.scheduler.reset_mock()
         for _ in range(5):
-            self.manager.snooze(10)
+            self.manager._trigger_alarm(self.uid, True)
+        self.scheduler.reset_mock()
         self.manager._trigger_alarm(self.uid, True)
-        self.scheduler.add_job.assert_called_once_with(self.alarm.find_next_alarm())
+        self.scheduler.add_job.assert_called_once_with(
+            self.alarm.find_next_alarm(), alarm.manager.AlarmJob
+        )
 
     @mock.patch("ui.controller.UiController", mock.Mock())
     def test_PRIVATE_trigger_resets_snooze_count_after_a_stop(self):
@@ -155,7 +164,7 @@ class ManagerTest(unittest.TestCase):
             self.scheduler.reset_mock()
             self.manager._trigger_alarm(self.uid, True)
             self.scheduler.add_job.assert_called_once_with(
-                datetime.datetime(2019, 7, 21, 8, 10)
+                datetime.datetime(2019, 7, 21, 8, 10), alarm.manager.AlarmJob
             )
 
     def test_stop_stops_current_playback(self):
@@ -180,5 +189,5 @@ class ManagerTest(unittest.TestCase):
         self.scheduler.add_job.return_value = self.uid
         self.player = mock.Mock()
         self.player.play.return_value = True
-        self.manager = Manager(self.scheduler, self.player)
+        self.manager = alarm.manager.Manager(self.scheduler, self.player)
         self.alarm = mock.Mock()

@@ -74,6 +74,7 @@ class PlaylistTest(unittest.TestCase):
         playlist.pause()
         time.sleep(0.01)  # Bodge to make sure fully escaped last play
         playlist.play()
+        time.sleep(0.01)  # Bodge to make sure fully escaped last play
         self.assertEqual(basic_mock.call_count, 5)
 
     def test_stop_calls_tracks_stop(self, basic_mock):
@@ -101,15 +102,19 @@ class PlaylistTest(unittest.TestCase):
         self.assertEqual(basic_mock.call_count, 5)
 
     def test_playlist_randomises_order_of_tracks(self, basic_mock):
-        playlist = sound.playlist.Playlist("../../test_data/playlist_multiple")
-        playlist.play()
-        first_calls = basic_mock.call_args
-        basic_mock.reset_mock()
-        playlist = sound.playlist.Playlist("../../test_data/playlist_multiple")
-        playlist.play()
         different = False
-        for first, second in zip(first_calls, basic_mock.call_args):
-            if first != second:
+        for _ in range(5):
+            playlist = sound.playlist.Playlist("../../test_data/playlist_multiple")
+            playlist.play()
+            first_calls = basic_mock.call_args
+            basic_mock.reset_mock()
+            playlist = sound.playlist.Playlist("../../test_data/playlist_multiple")
+            playlist.play()
+            different_iter = False
+            for first, second in zip(first_calls, basic_mock.call_args):
+                if first != second:
+                    different_iter = True
+            if different_iter:
                 different = True
         self.assertTrue(different)
 

@@ -2,8 +2,9 @@ import PyQt5.QtWidgets
 import PyQt5.QtCore
 import PyQt5.QtGui
 
-import ui.controller
+
 import alarm.alarm
+import ui
 import ui.alarm.days
 import utils.layout
 import utils.qtext
@@ -54,7 +55,7 @@ class AlarmWidget(PyQt5.QtWidgets.QWidget):
         layout.addWidget(ui.alarm.days.DaysWidget(view_alarm.active_days()))
 
     def _click_event(self, _):
-        ui.controller.UiController().set_screen("alarm_edit", edit_alarm=self._alarm)
+        ui.Ctrl().set_screen(ui.Screen.EDIT, alarm=self._alarm)
 
 
 def create_time(time, active):
@@ -72,9 +73,7 @@ class AddWidget(utils.qtext.QText):
 
 
 def _click_event(_):
-    # new_alarm = alarm.alarm.Alarm(0, 0, [], None, True)
-    # ui.controller.UiController().set_screen("alarm_edit", edit_alarm=new_alarm)
-    ui.controller.UiController().set_screen("alarm_edit", edit_alarm=None)
+    ui.Ctrl().set_screen(ui.Screen.EDIT, alarm=None)
 
 
 class TimeWidget(utils.qtext.QText):

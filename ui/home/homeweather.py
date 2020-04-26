@@ -67,8 +67,9 @@ class Widget(PyQt5.QtWidgets.QWidget):
 
 
 class Group(PyQt5.QtWidgets.QWidget):
-    def __init__(self, num_widgets=5, parent=None):
+    def __init__(self, weather, num_widgets=5, parent=None):
         super(Group, self).__init__(parent)
+        self._weather = weather
 
         layout = utils.layout.create_horizontal_layout(self)
         for _ in range(num_widgets):
@@ -83,9 +84,13 @@ class Group(PyQt5.QtWidgets.QWidget):
 
     def update_all(self):
         try:
-            updates = weather.darksky.DarkskyWeather().get_weather("Guildford").data
-            for widget, key in zip(self.findChildren(Widget), sorted(updates)[0::3]):
-                widget.update(updates[key].w_type, updates[key].feel_temp, key)
+            # updates = weather.darksky.Darksky().get_weather("Guildford").data
+            # for widget, key in zip(self.findChildren(Widget), sorted(updates)[0::3]):
+            #     widget.update(updates[key].w_type, updates[key].feel_temp, key)
+            for widget, updates in zip(
+                self.findChildren(Widget), self._weather.get_short_weather()
+            ):
+                widget.update(updates.w_type, updates.temp, updates.time)
         except:
             for widget in self.findChildren(Widget):
                 widget.update(0, 99, datetime.datetime.now())

@@ -1,7 +1,7 @@
 import datetime
 import PyQt5.QtWidgets
 
-import ui.controller
+import ui
 import alarm.alarm
 import utils.qtext
 import utils.layout
@@ -47,4 +47,4 @@ class NextAlarm(PyQt5.QtWidgets.QWidget):
 
 
 def _click_event(_):
-    ui.controller.UiController().set_screen("alarm_view")
+    ui.Ctrl().set_screen(ui.Screen.VIEW)

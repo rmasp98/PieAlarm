@@ -19,8 +19,7 @@ class SnoozeScreen(PyQt5.QtWidgets.QWidget):
         snooze.mouseReleaseEvent = self._snooze_event
         layout.addWidget(snooze)
 
-        stop = ui.widgets.slider.Slider(self._alarm_manager)
-        # stop.mouseReleaseEvent = self._stop_event
+        stop = ui.widgets.slider.Slider(self._alarm_manager.stop)
         layout.addWidget(
             stop, alignment=PyQt5.QtCore.Qt.AlignHCenter | PyQt5.QtCore.Qt.AlignVCenter
         )

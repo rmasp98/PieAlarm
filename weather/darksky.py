@@ -1,7 +1,7 @@
 import requests
 import datetime
 
-import weather.weather
+import weather.data
 
 
 url = "https://api.darksky.net/forecast/"
@@ -22,7 +22,7 @@ icons = {
 }
 
 
-class DarkskyWeather:
+class Darksky:
     def __init__(
         self,
         base_url="https://api.darksky.net/forecast/",
@@ -45,7 +45,7 @@ class DarkskyWeather:
         for data in response["hourly"]["data"]:
             new_data[
                 datetime.datetime.fromtimestamp(data["time"])
-            ] = weather.weather.TimeData(
+            ] = weather.data.TimeData(
                 temp=data["temperature"],
                 feel_temp=data["apparentTemperature"],
                 w_type=self._get_icon(data["icon"]),
@@ -58,11 +58,11 @@ class DarkskyWeather:
                 visibility=data["visibility"],
             )
 
-        new_units = weather.weather.Units(temp="C", speed="mph")
+        new_units = weather.data.Units(temp="C", speed="mph")
         if response["flags"]["units"] == "uk2":
-            new_units = weather.weather.Units(temp="C", speed="mph")
+            new_units = weather.data.Units(temp="C", speed="mph")
 
-        return weather.weather.WeatherData(
+        return weather.data.WeatherData(
             location=location, data=new_data, units=new_units
         )
 

@@ -14,7 +14,7 @@ data_times = [
     datetime.datetime.fromtimestamp(1585346400),
     datetime.datetime.fromtimestamp(1585350000),
 ]
-test_data = weather.weather.TimeData(
+test_data = weather.data.TimeData(
     temp=6.44,
     feel_temp=2.24,
     w_type=2,
@@ -34,7 +34,7 @@ class DarkskyTest(unittest.TestCase):
         get_mock.get(
             baseurl + key + "/51.2362,0.5704?units=uk2", json={}, status_code=403
         )
-        darksky = weather.darksky.DarkskyWeather(baseurl, key)
+        darksky = weather.darksky.Darksky(baseurl, key)
         self.assertRaises(ValueError, darksky.get_weather, location, options)
 
     @requests_mock.mock()
@@ -43,7 +43,7 @@ class DarkskyTest(unittest.TestCase):
             baseurl + key + "/51.2362,0.5704?units=uk2",
             json=json.loads(open("test_data/darksky_response_short.json").read()),
         )
-        darksky = weather.darksky.DarkskyWeather(baseurl, key)
+        darksky = weather.darksky.Darksky(baseurl, key)
         weather_location = darksky.get_weather(location, options).location
         self.assertEqual(weather_location, location)
 
@@ -53,9 +53,9 @@ class DarkskyTest(unittest.TestCase):
             baseurl + key + "/51.2362,0.5704?units=uk2",
             json=json.loads(open("test_data/darksky_response_short.json").read()),
         )
-        darksky = weather.darksky.DarkskyWeather(baseurl, key)
+        darksky = weather.darksky.Darksky(baseurl, key)
         units = darksky.get_weather(location, options).units
-        self.assertEqual(units, weather.weather.Units(temp="C", speed="mph"))
+        self.assertEqual(units, weather.data.Units(temp="C", speed="mph"))
 
     @requests_mock.mock()
     def test_returns_weather_object_containing_correct_times(self, get_mock):
@@ -63,7 +63,7 @@ class DarkskyTest(unittest.TestCase):
             baseurl + key + "/51.2362,0.5704?units=uk2",
             json=json.loads(open("test_data/darksky_response_short.json").read()),
         )
-        darksky = weather.darksky.DarkskyWeather(baseurl, key)
+        darksky = weather.darksky.Darksky(baseurl, key)
         times = darksky.get_weather(location, options).data.keys()
         self.assertListEqual(list(times), data_times)
 
@@ -73,6 +73,6 @@ class DarkskyTest(unittest.TestCase):
             baseurl + key + "/51.2362,0.5704?units=uk2",
             json=json.loads(open("test_data/darksky_response_short.json").read()),
         )
-        darksky = weather.darksky.DarkskyWeather(baseurl, key)
+        darksky = weather.darksky.Darksky(baseurl, key)
         data = darksky.get_weather(location, options).data.values()
         self.assertEqual(list(data)[0], test_data)

@@ -133,3 +133,8 @@ Icon {
   font-size: 25px;
   color: white;
 }
+
+QToolButton:hover {
+  background-color: transparent;
+}
+

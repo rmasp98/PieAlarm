@@ -1,42 +1,53 @@
 import collections
-import PyQt5.QtWidgets
-import PyQt5.QtGui
-import PyQt5.QtCore
 
-import ui.window
-import ui.home.home as Home
-import alarm.manager
-import alarm.alarm
-import ui.alarm.view as AlarmView
-import ui.alarm.edit as AlarmEdit
-import ui.alarm.snooze as AlarmSnooze
+import ui
+from ui import signal
+from ui.home import home
+from ui.alarm import view
+from ui.alarm import edit
+from ui.alarm import snooze
 
 
 class UiController:
     class _UiController:
-        def __init__(self, screen, theme):
-            self._app = PyQt5.QtWidgets.QApplication([])
-            self._window = ui.window.Window()
-            PyQt5.QtGui.QFontDatabase.addApplicationFont(
-                "ui/fonts/square_sans_serif_7.ttf"
-            )
-
-            self._alarm_manager = alarm.manager.Manager()
-            self._screen_signal = ScreenSignal(self._set_screen)
-            self._screen = ""
+        def __init__(self):
+            self._screen_signal = signal.ScreenSignal(self._set_screen)
+            self._screen = None
             self._last_screen = collections.deque(maxlen=10)
-            self._focus_alarm = None
 
-            self.set_screen(screen, False)
-            self.set_theme(theme)
+        def init(self, app, window, alarm_manager, weather):
+            self._app = app
+            self._window = window
+            self._alarm_manager = alarm_manager
+            self._weather = weather
 
         def set_theme(self, theme):
             self._window.set_theme(theme)
 
-        def set_screen(self, screen, append_last_screen=True, edit_alarm=None):
-            # if edit_alarm is not None:
-            self._alarm_manager.set_focused_alarm(edit_alarm)
-            self._screen_signal.emit(screen, append_last_screen)
+        def set_screen(self, screen, alarm=None, append_back=True):
+            self._screen_signal.emit(screen, alarm, append_back)
+
+        def _set_screen(self, screen, alarm, append_back):
+            self.enable_toolbar_clock(True)
+            self.enable_toolbar_edit(False, None, None)
+            if screen == ui.Screen.HOME:
+                self.enable_toolbar_clock(False)
+                new_screen = home.HomeScreen(self._alarm_manager, self._weather)
+            elif screen == ui.Screen.VIEW:
+                new_screen = view.ViewScreen(self._alarm_manager)
+            elif screen == ui.Screen.EDIT:
+                new_screen = edit.EditScreen(alarm, self._alarm_manager)
+            elif screen == ui.Screen.SNOOZE:
+                new_screen = snooze.SnoozeScreen(self._alarm_manager)
+
+            if append_back:
+                self._last_screen.append(self._screen)
+            self._screen = screen
+            self._window.set_central_widget(new_screen)
+
+        def back(self):
+            if self._last_screen:
+                self.set_screen(self._last_screen.pop(), append_back=False)
 
         def enable_toolbar_edit(self, enable, save_event, delete_event):
             self._window.enable_toolbar_edit(enable, save_event, delete_event)
@@ -44,47 +55,20 @@ class UiController:
         def enable_toolbar_clock(self, enable):
             self._window.enable_toolbar_clock(enable)
 
-        def _set_screen(self, screen, append_back):
-            if screen in screens:
-                self.enable_toolbar_edit(False, None, None)
-                self.enable_toolbar_clock(screen != "main")
-                if append_back:
-                    self._last_screen.append(self._screen)
-                self._screen = screen
-                self._window.set_central_widget(screens[screen](self._alarm_manager))
-            elif screen == "back":
-                if self._last_screen:
-                    self.set_screen(self._last_screen.pop(), False)
+        def exec(self, screen=ui.Screen.HOME, theme="default"):
+            self.set_screen(screen, append_back=False)
+            self.set_theme(theme)
 
-        def exec(self):
             self._window.show()
             self._app.exec_()
             self._alarm_manager.reset()
+            self._weather.kill()
 
     instance = None
 
-    def __init__(self, screen="main", theme="default"):
+    def __init__(self):
         if not UiController.instance:
-            UiController.instance = UiController._UiController(screen, theme)
+            UiController.instance = UiController._UiController()
 
     def __getattr__(self, name):
         return getattr(self.instance, name)
-
-
-class ScreenSignal(PyQt5.QtCore.QObject):
-    _signal = PyQt5.QtCore.pyqtSignal(str, bool)
-
-    def __init__(self, slot, parent=None):
-        super(ScreenSignal, self).__init__(parent)
-        self._signal.connect(slot)
-
-    def emit(self, screen, append_back):
-        self._signal.emit(screen, append_back)
-
-
-screens = {
-    "main": Home.HomeScreen,
-    "alarm_edit": AlarmEdit.EditScreen,
-    "alarm_view": AlarmView.ViewScreen,
-    "snooze": AlarmSnooze.SnoozeScreen,
-}

@@ -10,7 +10,6 @@ Different moduels needed
 
 
 TODO:
-  - Slider for stop alarm
   - Changeable background image
   - Dark theme
   - Light sensor to switch to dark theme at night after small timeout

@@ -7,15 +7,15 @@ import utils.layout
 
 
 class HomeScreen(PyQt5.QtWidgets.QWidget):
-    def __init__(self, alarm_manager, parent=None):
+    def __init__(self, alarm_manager, weather, parent=None):
         super(HomeScreen, self).__init__(parent)
-        self.setup_screen(alarm_manager.get_next_alarm_time())
 
-    def setup_screen(self, next_alarm):
         vert_layout = utils.layout.create_vertical_layout(self)
-        vert_layout.addWidget(ui.home.homeweather.Group())
+        vert_layout.addWidget(ui.home.homeweather.Group(weather))
         vert_layout.addWidget(ui.home.clock.DigitalClock(150))
-        vert_layout.addWidget(ui.home.nextalarm.NextAlarm(next_alarm))
+        vert_layout.addWidget(
+            ui.home.nextalarm.NextAlarm(alarm_manager.get_next_alarm_time())
+        )
 
     def show_weather(self, show):
         self.findChild(ui.home.homeweather.Group).show_weather(show)
