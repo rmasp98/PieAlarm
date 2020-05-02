@@ -6,8 +6,8 @@ import PyQt5.QtGui
 import alarm.alarm
 import ui
 import ui.alarm.days
-import utils.layout
-import utils.qtext
+import ui.widgets.layout
+import ui.widgets.qtext
 
 
 class ViewScreen(PyQt5.QtWidgets.QWidget):
@@ -30,7 +30,7 @@ class ViewScreen(PyQt5.QtWidgets.QWidget):
 
     def _set_grid(self, alarm_manager):
         self._grid = PyQt5.QtWidgets.QWidget()
-        grid_layout = utils.layout.create_grid_layout(self._grid)
+        grid_layout = ui.widgets.layout.create_grid_layout(self._grid)
         grid_layout.setAlignment(PyQt5.QtCore.Qt.AlignTop)
 
         i = 0
@@ -50,7 +50,7 @@ class AlarmWidget(PyQt5.QtWidgets.QWidget):
         self._alarm = view_alarm
         self.mouseReleaseEvent = self._click_event
 
-        layout = utils.layout.create_vertical_layout(self)
+        layout = ui.widgets.layout.create_vertical_layout(self)
         layout.addWidget(create_time(view_alarm.time(), active))
         layout.addWidget(ui.alarm.days.DaysWidget(view_alarm.active_days()))
 
@@ -64,7 +64,7 @@ def create_time(time, active):
     return time_label
 
 
-class AddWidget(utils.qtext.QText):
+class AddWidget(ui.widgets.qtext.QText):
     def __init__(self, parent=None):
         super(AddWidget, self).__init__(parent)
         pixmap = PyQt5.QtGui.QPixmap("ui/icons/add.png")
@@ -76,5 +76,5 @@ def _click_event(_):
     ui.Ctrl().set_screen(ui.Screen.EDIT, alarm=None)
 
 
-class TimeWidget(utils.qtext.QText):
+class TimeWidget(ui.widgets.qtext.QText):
     pass

@@ -1,7 +1,7 @@
 import threading
 import datetime
 
-import utils.observer
+import scheduler.observer
 
 
 class Job:
@@ -18,7 +18,7 @@ class Job:
     This class should then be passed to scheduler when adding a new job
     """
 
-    _complete = utils.observer.Observer()
+    _complete = scheduler.observer.Observer()
 
     @classmethod
     def subscribe(cls, callback):

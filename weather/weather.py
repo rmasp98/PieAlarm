@@ -14,7 +14,7 @@ class ShortData(typing.NamedTuple):
 
 
 class Weather:
-    def __init__(self, api, location="Guildford", options=None):
+    def __init__(self, api, location="Guildford", options={"units": "uk2"}):
         self._location = location
         self._options = options
         self._api = api

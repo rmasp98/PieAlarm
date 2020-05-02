@@ -4,11 +4,11 @@ import time
 import scheduler.scheduler
 import sound.player
 import ui
-import utils.observer
+import scheduler.observer
 
 
 class AlarmJob(scheduler.job.Job):
-    _local_complete = utils.observer.Observer()
+    _local_complete = scheduler.observer.Observer()
 
 
 class Manager:

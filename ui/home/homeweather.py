@@ -3,8 +3,8 @@ import PyQt5.QtWidgets
 import PyQt5.QtGui
 
 import weather.darksky
-import utils.layout
-import utils.qtext
+import ui.widgets.layout
+import ui.widgets.qtext
 
 icons = [
     "ui/icons/weather/no_weather.png",
@@ -56,7 +56,7 @@ class Icon(PyQt5.QtWidgets.QWidget):
 class Widget(PyQt5.QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(Widget, self).__init__(parent)
-        layout = utils.layout.create_vertical_layout(self)
+        layout = ui.widgets.layout.create_vertical_layout(self)
 
         icon = Icon(10, 99, datetime.datetime.now(), 100)
         icon.setObjectName("icon")
@@ -71,11 +71,11 @@ class Group(PyQt5.QtWidgets.QWidget):
         super(Group, self).__init__(parent)
         self._weather = weather
 
-        layout = utils.layout.create_horizontal_layout(self)
+        layout = ui.widgets.layout.create_horizontal_layout(self)
         for _ in range(num_widgets):
-            layout.addSpacerItem(utils.layout.create_spacer())
+            layout.addSpacerItem(ui.widgets.layout.create_spacer())
             layout.addWidget(Widget())
-        layout.addSpacerItem(utils.layout.create_spacer())
+        layout.addSpacerItem(ui.widgets.layout.create_spacer())
 
         timer = PyQt5.QtCore.QTimer(self)
         timer.timeout.connect(self.update_all)

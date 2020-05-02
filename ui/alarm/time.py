@@ -1,13 +1,13 @@
 import PyQt5.QtWidgets
 
 import ui.widgets.spinner
-import utils.layout
+import ui.widgets.layout
 
 
 class TimeEdit(PyQt5.QtWidgets.QWidget):
     def __init__(self, hour=0, minute=0, parent=None):
         super(TimeEdit, self).__init__(parent)
-        layout = utils.layout.create_horizontal_layout(self)
+        layout = ui.widgets.layout.create_horizontal_layout(self)
 
         layout.addStretch()
         self._hour = ui.widgets.spinner.Spinner(0, 24, hour)

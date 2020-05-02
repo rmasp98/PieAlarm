@@ -8,7 +8,7 @@ import ui.alarm.time
 import ui.alarm.days
 import ui.alarm.playback
 import ui.widgets.toggle
-import utils.layout
+import ui.widgets.layout
 
 
 class EditScreen(PyQt5.QtWidgets.QWidget):
@@ -19,7 +19,7 @@ class EditScreen(PyQt5.QtWidgets.QWidget):
 
         if self._edit_alarm is not None:
             self._set_layout(
-                utils.layout.create_vertical_layout(self),
+                ui.widgets.layout.create_vertical_layout(self),
                 self._edit_alarm.time(),
                 self._edit_alarm.active_days(),
                 self._edit_alarm.is_active(),
@@ -27,7 +27,7 @@ class EditScreen(PyQt5.QtWidgets.QWidget):
             )
         else:
             self._set_layout(
-                utils.layout.create_vertical_layout(self),
+                ui.widgets.layout.create_vertical_layout(self),
                 datetime.time(0, 0),
                 {},
                 True,
@@ -39,7 +39,7 @@ class EditScreen(PyQt5.QtWidgets.QWidget):
         h_widget = PyQt5.QtWidgets.QWidget()
         # TODO: bodge to get size right but still looks a bit shit
         h_widget.setMinimumHeight(200)
-        h_layout = utils.layout.create_horizontal_layout(h_widget, layout)
+        h_layout = ui.widgets.layout.create_horizontal_layout(h_widget, layout)
         self._time_widget = ui.alarm.time.TimeEdit(time.hour, time.minute)
         h_layout.addWidget(self._time_widget)
 

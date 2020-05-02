@@ -3,7 +3,6 @@ import PyQt5.QtGui
 import PyQt5.QtCore
 
 import ui.controller
-import utils.qtext
 import light.light
 import ui.home.clock
 

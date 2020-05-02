@@ -3,14 +3,14 @@ import PyQt5.QtWidgets
 import ui.home.homeweather
 import ui.home.nextalarm
 import ui.home.clock
-import utils.layout
+import ui.widgets.layout
 
 
 class HomeScreen(PyQt5.QtWidgets.QWidget):
     def __init__(self, alarm_manager, weather, parent=None):
         super(HomeScreen, self).__init__(parent)
 
-        vert_layout = utils.layout.create_vertical_layout(self)
+        vert_layout = ui.widgets.layout.create_vertical_layout(self)
         vert_layout.addWidget(ui.home.homeweather.Group(weather))
         vert_layout.addWidget(ui.home.clock.DigitalClock(150))
         vert_layout.addWidget(

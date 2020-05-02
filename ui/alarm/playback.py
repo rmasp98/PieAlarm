@@ -3,7 +3,7 @@ import pathlib
 import glob
 import PyQt5.QtWidgets
 
-import utils.layout
+import ui.widgets.layout
 
 
 class PlaybackWidget(PyQt5.QtWidgets.QWidget):
@@ -11,7 +11,7 @@ class PlaybackWidget(PyQt5.QtWidgets.QWidget):
 
     def __init__(self, playback, parent=None):
         super(PlaybackWidget, self).__init__(parent)
-        layout = utils.layout.create_horizontal_layout(self)
+        layout = ui.widgets.layout.create_horizontal_layout(self)
 
         self._playback = playback
         if self._playback is None:
@@ -49,7 +49,7 @@ class _PlaybackCombo(PyQt5.QtWidgets.QWidget):
     def __init__(self, label, combo_items, start_item, parent=None):
         super(_PlaybackCombo, self).__init__(parent)
 
-        layout = utils.layout.create_horizontal_layout(self)
+        layout = ui.widgets.layout.create_horizontal_layout(self)
 
         self._label = PyQt5.QtWidgets.QLabel()
         layout.addWidget(self._label)

@@ -2,11 +2,11 @@ import PyQt5.QtCore
 import PyQt5.QtWidgets
 import PyQt5.QtGui
 
-import utils.qtext
-import utils.layout
+import ui.widgets.qtext
+import ui.widgets.layout
 
 
-class DigitalClock(utils.qtext.QText):
+class DigitalClock(ui.widgets.qtext.QText):
     def __init__(self, font_size, parent=None):
         super(DigitalClock, self).__init__(parent)
         font = self.font()

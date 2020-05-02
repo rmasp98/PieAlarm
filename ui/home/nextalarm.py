@@ -3,22 +3,22 @@ import PyQt5.QtWidgets
 
 import ui
 import alarm.alarm
-import utils.qtext
-import utils.layout
+import ui.widgets.qtext
+import ui.widgets.layout
 
 
 class NextAlarm(PyQt5.QtWidgets.QWidget):
     def __init__(self, time, parent=None):
         super(NextAlarm, self).__init__(parent)
 
-        layout = utils.layout.create_horizontal_layout(self)
+        layout = ui.widgets.layout.create_horizontal_layout(self)
         layout.addStretch()
         image = PyQt5.QtWidgets.QLabel()
         pixmap = PyQt5.QtGui.QPixmap("ui/icons/alarm.png")
         image.setPixmap(pixmap.scaledToWidth(35))
         layout.addWidget(image)
 
-        self._text = utils.qtext.QText()
+        self._text = ui.widgets.qtext.QText()
         layout.addWidget(self._text)
         layout.addStretch()
 
