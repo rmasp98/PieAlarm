@@ -45,15 +45,17 @@ pialarm_dir="/home/${username}/PieAlarm"
 echo "Setting up the PieAlarm"
 echo "Please provide the darksky api key:" && read darksky_key
 echo ${darksky_key} > /home/${username}/api_key
+
 echo "Pulling down script to set up PieAlarm"
-#wget https://github.com/rmasp98/ 
-#run the script
+update_script="/home/${username}/update_alarm.sh"
+wget https://raw.githubusercontent.com/rmasp98/PieAlarm/master/rpi_setup/update_alarm.sh -O ${update_script}
+${update_script}
 
 ##################################################################
 xsession_file="/home/${username}/.xsession"
 echo "Creating .xsession file for ${username} in ${xsession_file}"
 cat > ${xsession_file} <<EOF 
-\${HOME}/update_alarm.sh start &
+${update_script} start &
 feh --bg-fill /home/${username}/.config/background.jpg
 exec sleep infinity
 EOF
