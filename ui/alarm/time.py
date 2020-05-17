@@ -1,20 +1,27 @@
 import PyQt5.QtWidgets
 
-import ui.widgets.spinner
-import ui.widgets.layout
+from ui.widgets.spinner import Spinner
+from ui.widgets.layout import create_horizontal_layout
+from ui.widgets.text import FontSize
 
 
 class TimeEdit(PyQt5.QtWidgets.QWidget):
     def __init__(self, hour=0, minute=0, parent=None):
         super(TimeEdit, self).__init__(parent)
-        layout = ui.widgets.layout.create_horizontal_layout(self)
+        layout = create_horizontal_layout(self)
 
         layout.addStretch()
-        self._hour = ui.widgets.spinner.Spinner(0, 24, hour)
+        self._hour = Spinner(
+            ["{:0>2d}".format(i) for i in range(24)], start_index=hour, underhang=False
+        )
         layout.addWidget(self._hour)
-        self._minute = ui.widgets.spinner.Spinner(0, 60, minute)
+        self._minute = Spinner(
+            ["{:0>2d}".format(i) for i in range(60)],
+            start_index=minute,
+            underhang=False,
+        )
         layout.addWidget(self._minute)
         layout.addStretch()
 
     def get_time(self):
-        return self._hour.get_value(), self._minute.get_value()
+        return int(self._hour.get_value()), int(self._minute.get_value())

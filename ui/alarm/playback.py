@@ -3,7 +3,11 @@ import pathlib
 import glob
 import PyQt5.QtWidgets
 
-import ui.widgets.layout
+from ui.widgets.layout import create_vertical_layout
+from ui.widgets.layout import create_horizontal_layout
+from ui.widgets.spinner import Spinner
+from ui.widgets.text import Text
+from ui.widgets.text import FontSize
 
 
 class PlaybackWidget(PyQt5.QtWidgets.QWidget):
@@ -11,74 +15,57 @@ class PlaybackWidget(PyQt5.QtWidgets.QWidget):
 
     def __init__(self, playback, parent=None):
         super(PlaybackWidget, self).__init__(parent)
-        layout = ui.widgets.layout.create_horizontal_layout(self)
+        layout = create_vertical_layout(self)
 
-        self._playback = playback
-        if self._playback is None:
-            self._playback = {"type": "basic"}
+        # self._playback = playback
+        # if self._playback is None:
+        #     self._playback = {"type": "basic"}
 
-        self._type_combo = _PlaybackCombo("type", self.types, self._playback["type"])
-        layout.addWidget(self._type_combo)
-        self._type_combo.connect(self._get_type_data_widget)
+        self._type = PlaybackSpinner("type", self.types, 0)
+        self._type.connect(self._update_playback_options)
+        layout.addWidget(self._type)
 
-        self._playback_data = _PlaybackCombo("", [], "")
+        self._playback_data = PlaybackSpinner("TEMP", [], 0)
         layout.addWidget(self._playback_data)
-        self._get_type_data_widget()
+
+        self._update_playback_options("basic")
 
     def get_playback(self):
-        return {
-            self._type_combo.get_name(): self._type_combo.get_value(),
-            self._playback_data.get_name(): self._playback_data.get_value(),
-        }
+        return {**self._type.get_playback(), **self._playback_data.get_playback()}
 
-    def _get_type_data_widget(self):
-        playback_type = self._type_combo.get_value()
+    def _update_playback_options(self, playback_type):
         if playback_type == "basic":
             self._playback_data.update("track", _get_tracks())
-            if "track" in self._playback:
-                self._playback_data.set_value(self._playback["track"])
         elif playback_type == "playlist":
             self._playback_data.update("playlist", _get_playlists())
-            if "playlist" in self._playback:
-                self._playback_data.set_value(self._playback["playlist"])
-        else:
-            raise ValueError("You have broken everything!")
 
 
-class _PlaybackCombo(PyQt5.QtWidgets.QWidget):
-    def __init__(self, label, combo_items, start_item, parent=None):
-        super(_PlaybackCombo, self).__init__(parent)
+class PlaybackSpinner(PyQt5.QtWidgets.QWidget):
+    def __init__(self, label, options, start_index, parent=None):
+        super(PlaybackSpinner, self).__init__(parent)
+        self._layout = create_horizontal_layout(self)
 
-        layout = ui.widgets.layout.create_horizontal_layout(self)
+        self._label = Text(label, FontSize.SMALL)
+        self._label.setMinimumWidth(50)
+        self._layout.addWidget(self._label)
+        self._layout.addSpacing(100)
 
-        self._label = PyQt5.QtWidgets.QLabel()
-        layout.addWidget(self._label)
+        self._spinner = Spinner(options, start_index=start_index, loop=False)
+        self._layout.addWidget(self._spinner)
+        self._layout.addStretch()
 
-        self._combo = PyQt5.QtWidgets.QComboBox()
-        layout.addWidget(self._combo)
-
-        self.update(label, combo_items)
-        if start_item in combo_items:
-            self._combo.setCurrentText(start_item)
-
-    def update(self, label, combo_items):
+    def update(self, label, options):
         self._label.setText(label)
-        self._combo.clear()
-        self._combo.addItems(combo_items)
+        new_spinner = Spinner(options, start_index=0, loop=False)
+        self._layout.replaceWidget(self._spinner, new_spinner)
+        self._spinner.deleteLater()
+        self._spinner = new_spinner
 
-    def get_name(self):
-        return self._label.text()
-
-    def get_value(self):
-        return self._combo.currentText()
-
-    def set_value(self, value):
-        index = self._combo.findText(value)
-        if index != -1:
-            self._combo.setCurrentIndex(index)
+    def get_playback(self):
+        return {self._label.text(): self._spinner.get_value()}
 
     def connect(self, callback):
-        self._combo.activated[str].connect(callback)
+        self._spinner.change_value.connect(callback)
 
 
 # TODO: I want to eventually just display file name
@@ -86,7 +73,7 @@ class _PlaybackCombo(PyQt5.QtWidgets.QWidget):
 def _get_tracks():
     files = list(pathlib.Path("sound/tracks").rglob("*.wav"))
     files.extend(pathlib.Path("sound/tracks").rglob("*.mp3"))
-    return [i.as_posix() for i in files]
+    return [i.as_posix()[13:] for i in files]
 
 
 def _get_playlists():

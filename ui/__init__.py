@@ -7,6 +7,7 @@ class Screen(enum.Enum):
     VIEW = 1
     EDIT = 2
     SNOOZE = 3
+    SETTINGS = 4
 
 
 from ui.controller import UiController as Ctrl

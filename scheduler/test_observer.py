@@ -1,23 +1,23 @@
 import unittest
 import unittest.mock as mock
 
-import utils.observer
+from scheduler.observer import Observer
 
 
 class ObserverTest(unittest.TestCase):
     def test_throws_if_callback_not_callable(self):
-        observer = utils.observer.Observer()
+        observer = Observer()
         self.assertRaises(ValueError, observer.subscribe, "Hello")
 
     def test_callback_called_by_notify(self):
-        observer = utils.observer.Observer()
+        observer = Observer()
         callback = mock.Mock()
         observer.subscribe(callback)
         observer.notify()
         callback.assert_called()
 
     def test_can_notify_multiple_objects(self):
-        observer = utils.observer.Observer()
+        observer = Observer()
         callback1 = mock.Mock()
         observer.subscribe(callback1)
         callback2 = mock.Mock()
@@ -27,7 +27,7 @@ class ObserverTest(unittest.TestCase):
         callback2.assert_called()
 
     def test_can_pass_arguments_to_objects(self):
-        observer = utils.observer.Observer()
+        observer = Observer()
         callback = mock.Mock()
         observer.subscribe(callback)
         observer.notify("0000")
@@ -37,6 +37,14 @@ class ObserverTest(unittest.TestCase):
         self.assertEqual(arg_list, expected)
 
     def test_throws_error_if_object_expects_different_arguments_to_notify(self):
-        observer = utils.observer.Observer()
+        observer = Observer()
         observer.subscribe(lambda arg1, arg2: print(arg1, arg2))
         self.assertRaises(ValueError, observer.notify, "0000")
+
+    def test_reset_removes_any_subscribers(self):
+        observer = Observer()
+        callback = mock.Mock()
+        observer.subscribe(callback)
+        observer.reset()
+        observer.notify()
+        callback.assert_not_called()

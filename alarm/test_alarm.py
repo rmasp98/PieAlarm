@@ -49,12 +49,25 @@ class AlarmTest(unittest.TestCase):
                 test_alarm.find_next_alarm(), datetime.datetime(2019, 7, 30, 6, 30)
             )
 
+    def test_can_deserialise_alarm(self):
+        test_alarm = create_alarm()
+        self.assertDictEqual(
+            test_alarm.serialise(),
+            {
+                "hour": 0,
+                "minute": 0,
+                "days": ["Monday"],
+                "playback": {"type": "basic", "track": "song.mp3"},
+                "active": True,
+            },
+        )
+
 
 def create_alarm(
     hour=0,
     minute=0,
     days=["Monday"],
-    playback={"type": "basic", "track": "sound/tracks/song.mp3"},
+    playback={"type": "basic", "track": "song.mp3"},
     active=True,
 ):
     return alarm.alarm.Alarm(hour, minute, days, playback, active)

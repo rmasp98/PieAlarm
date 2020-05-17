@@ -13,7 +13,7 @@ class JobTest(unittest.TestCase):
         scheduler.job.Job("uid", datetime.datetime.now())
         start_mock.assert_called()
 
-    @mock.patch("utils.observer.Observer.subscribe")
+    @mock.patch("scheduler.observer.Observer.subscribe")
     def test_can_subscribe_to_job_class(self, sub_mock):
         callback = mock.Mock()
         scheduler.job.Job.subscribe(callback)

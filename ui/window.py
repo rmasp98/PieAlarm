@@ -3,6 +3,7 @@ import PyQt5.QtCore
 import PyQt5.QtGui
 
 import ui.toolbar
+from ui.keyboard import Keyboard
 
 
 class Window(PyQt5.QtWidgets.QMainWindow):
@@ -16,6 +17,12 @@ class Window(PyQt5.QtWidgets.QMainWindow):
         self.setStyleSheet(open("ui/theme.qss").read())
         self._theme = theme
 
+        self._keyboard = Keyboard()
+        self.addDockWidget(
+            PyQt5.QtCore.Qt.BottomDockWidgetArea, self._keyboard,
+        )
+        self._keyboard.hide()
+
         self._toolbar = ui.toolbar.ToolBar()
         self.addToolBar(PyQt5.QtCore.Qt.BottomToolBarArea, self._toolbar)
 
@@ -27,8 +34,16 @@ class Window(PyQt5.QtWidgets.QMainWindow):
     def set_central_widget(self, widget):
         self.setCentralWidget(widget)
 
-    def enable_toolbar_edit(self, enable, save_event, delete_event):
-        self._toolbar.enable_edit(enable, save_event, delete_event)
+    def enable_toolbar_action(self, action, enable=True, event=None):
+        self._toolbar.enable_action(action, enable, event)
 
     def enable_toolbar_clock(self, enable):
         self._toolbar.enable_clock(enable)
+
+    def enable_keyboard(self, enable=True):
+        if enable:
+            self._keyboard.reset()
+            self._keyboard.show()
+            return self._keyboard
+        else:
+            self._keyboard.hide()

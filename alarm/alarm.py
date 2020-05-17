@@ -57,17 +57,26 @@ class Alarm:
 
     def find_next_alarm(self):
         """Returns datetime object for when alarm should next be triggered"""
-        alarm_time = self._find_days_till_next_alarm()
+        alarm_time = self._find_next_alarm_day()
         return alarm_time.replace(
             hour=self._time.hour, minute=self._time.minute, second=0, microsecond=0
         )
+
+    def serialise(self):
+        return {
+            "hour": self._time.hour,
+            "minute": self._time.minute,
+            "days": list(self._days),
+            "playback": self._playback,
+            "active": self._active,
+        }
 
     def _check_day_is_valid(self, day):
         if day in self.Weekdays:
             return day
         raise ValueError(str(day) + " is not an accepted day")
 
-    def _find_days_till_next_alarm(self):
+    def _find_next_alarm_day(self):
         alarm_date = datetime.datetime.now()
         for _ in range(8):
             if self.Weekdays[alarm_date.weekday()] in self._days:

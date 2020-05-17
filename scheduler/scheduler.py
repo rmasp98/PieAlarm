@@ -13,13 +13,13 @@ class Scheduler:
     """
 
     def __init__(self):
-        self._time = None
+        self._next_time = None
         self._jobs = {}
         scheduler.job.Job.subscribe(self._job_complete)
 
     def get_next_job_time(self):
         """Returns time (as datetime) of soonest job to execute"""
-        return self._time
+        return self._next_time
 
     def add_job(self, time, job_class=scheduler.job.Job):
         """Accepts a datetime object for when job will execute.
@@ -50,7 +50,7 @@ class Scheduler:
             ):
                 next_time = update_job.get_time()
 
-        self._time = next_time
+        self._next_time = next_time
 
     def _job_complete(self, uid, _):
         self.remove_job(uid)

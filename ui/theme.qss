@@ -6,9 +6,18 @@ QMainWindow[theme=dark] {
   background-color: black
 } 
 
-/* QWidget {
-  border: 2px solid white;
-} */
+QWidget {
+  color: white;
+  /* border: 2px solid white; */
+}
+
+QLineEdit{
+  color: black;
+}
+
+Key {
+  font-size: 20px;
+}
 
 
 QToolBar {
@@ -21,46 +30,27 @@ QLabel {
   qproperty-alignment: 'AlignHCenter | AlignVCenter';
 }
 
-QText {
+Text {
   background-color: rgba(0, 0, 0, 100);
-  color: white;
 }
+
+*[active=true] { color: white; }
+*[active=false] { color: gray; }
+
+*[fontsize="XL"] { font-size: 150px; }
+*[fontsize="L"] { font-size: 100px; }
+*[fontsize="M"] { font-size: 35px; }
+*[fontsize="S"] { font-size: 15px; }
+
 
 /* Make Scrollbar area transparent */
 QScrollArea { background: transparent }
 QScrollArea > QWidget > QWidget { background: transparent }
 QScrollArea > QWidget > QScrollBar { background: palette(base); }
 
-NextAlarm > QText {
-  font-size: 35px;
-}
-
-
-DayLabel[active=true] {
-  font-size: 15px;
-  color: white;
-}
-
 DayLabel[active=true][highlight=true] {
   background-color: red;
   border-radius: 15px
-}
-
-DayLabel[active=false] {
-  font-size: 15px;
-  color: gray;
-}
-
-TimeWidget {
-  font-size: 125px;
-}
-
-TimeWidget[alarm_active=false] {
-  color: gray
-}
-
-SnoozeWidget {
-  font-size: 150px
 }
 
 ToggleSwitch {
@@ -105,27 +95,24 @@ Slider::handle:horizontal {
     border-radius: 15px;
 }
 
-
-QCheckBox {
-  color: white;
-}
-
-Spinner {
+TimeEdit > Spinner {
   font-size: 150px;
-  font: "square_sans_serif_7";
   color: orange;
 }
 
-QComboBox {
-  background: transparent;
-  selection-background-color: #f26d6d;
-  color: white;
-  selection-color: white;
+PlaybackSpinner > Spinner {
+  font-size: 20px;
+  qproperty-spacing: 45;
+  qproperty-textalign: "left";
 }
 
-QComboBox QAbstractItemView {
-  background: #000000;
-  border: none;
+SelectSetting  {
+  font-size: 15px;
+  qproperty-spacing: 45;
+}
+ColourSetting > Spinner  {
+  font-size: 15px;
+  qproperty-spacing: 45;
 }
 
 Icon {

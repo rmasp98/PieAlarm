@@ -33,12 +33,11 @@ class EditScreen(PyQt5.QtWidgets.QWidget):
                 True,
                 None,
             )
-        ui.controller.UiController().enable_toolbar_edit(True, self._save, self._delete)
+        ui.controller.UiController().enable_toolbar_action("save", event=self._save)
+        ui.controller.UiController().enable_toolbar_action("delete", event=self._delete)
 
     def _set_layout(self, layout, time, days, active, playback):
         h_widget = PyQt5.QtWidgets.QWidget()
-        # TODO: bodge to get size right but still looks a bit shit
-        h_widget.setMinimumHeight(200)
         h_layout = ui.widgets.layout.create_horizontal_layout(h_widget, layout)
         self._time_widget = ui.alarm.time.TimeEdit(time.hour, time.minute)
         h_layout.addWidget(self._time_widget)
@@ -47,6 +46,7 @@ class EditScreen(PyQt5.QtWidgets.QWidget):
         h_layout.addWidget(self._active_switch)
 
         self._days_widget = ui.alarm.days.DaysWidget(days, True)
+        self._days_widget.setMaximumHeight(75)
         layout.addWidget(self._days_widget)
 
         self._playback = ui.alarm.playback.PlaybackWidget(playback)
@@ -66,14 +66,14 @@ class EditScreen(PyQt5.QtWidgets.QWidget):
             self._alarm_manager.create_alarm(new_alarm)
             ui.Ctrl().back()
         except Exception as err:
-            _day_message(str(err))
+            _error_message(str(err))
 
     def _delete(self, _):
         self._alarm_manager.remove_alarm(self._edit_alarm)
         ui.Ctrl().back()
 
 
-def _day_message(message):
+def _error_message(message):
     msg = PyQt5.QtWidgets.QMessageBox()
     msg.setIcon(PyQt5.QtWidgets.QMessageBox.Warning)
     msg.setText(message)

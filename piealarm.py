@@ -9,12 +9,16 @@ import ui.window
 import alarm.manager
 import weather.weather
 import weather.darksky
+import settings.interface
+
+import PyQt5.QtCore
 
 
 def setup_logging():
     handler = logging.handlers.WatchedFileHandler(
         os.environ.get("LOGFILE", "piealarm.log")
     )
+
     formatter = logging.Formatter(logging.BASIC_FORMAT)
     handler.setFormatter(formatter)
     root = logging.getLogger()
@@ -27,14 +31,17 @@ if __name__ == "__main__":
     try:
         w = weather.weather.Weather(weather.darksky.Darksky())
         w.start_api_poll()
+        s = settings.interface.Interface()
         ui.Ctrl().init(
-            PyQt5.QtWidgets.QApplication([]),
+            PyQt5.QtWidgets.QApplication([os.sys.argv]),
             ui.window.Window(),
-            alarm.manager.Manager(),
+            alarm.manager.Manager(s),
             w,
+            s,
         )
-        # ui.Ctrl().exec(screen=ui.Screen.VIEW, theme="dark")
+        # ui.Ctrl().exec(screen=ui.Screen.SETTINGS, theme="dark")
         ui.Ctrl().exec(theme="dark")
-    except:
+    except Exception as e:
         logging.exception("Exception in main()")
+        print(e)
         exit(1)

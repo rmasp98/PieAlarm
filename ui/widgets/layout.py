@@ -18,7 +18,7 @@ def create_spacer():
         0,
         0,
         PyQt5.QtWidgets.QSizePolicy.MinimumExpanding,
-        PyQt5.QtWidgets.QSizePolicy.Minimum,
+        PyQt5.QtWidgets.QSizePolicy.MinimumExpanding,
     )
 
 

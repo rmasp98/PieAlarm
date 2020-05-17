@@ -12,8 +12,8 @@ _frame_rate = 44100
 _format = 32
 _length = 100
 _small_chunks = 1
-_wav_file = "sound/tracks/waterfall.wav"
-_mp3_file = "sound/tracks/song.mp3"
+_wav_file = "waterfall.wav"
+_mp3_file = "song.mp3"
 
 
 def create_audio_mock(
@@ -41,7 +41,10 @@ def async_play(pydub_mock, length=_length, track=_wav_file):
 class BasicTest(unittest.TestCase):
     def test_loading_file_fails_on_unrecognised_format(self, _, __):
         self.assertRaisesRegex(
-            ValueError, "File format not recognised", sound.basic.Basic, "README.md"
+            ValueError,
+            "File format not recognised",
+            sound.basic.Basic,
+            "../../README.md",
         )
 
     def test_can_load_a_wav_file(self, pydub_mock, _):
@@ -95,7 +98,7 @@ class BasicTest(unittest.TestCase):
         pydub_mock.from_mp3.assert_called_once()
 
     def test_verify_passes_if_valid_basic_sound_data(self, _, __):
-        sound_data = {"type": "basic", "track": "sound/tracks/song.mp3"}
+        sound_data = {"type": "basic", "track": "song.mp3"}
         self.assertTrue(sound.basic.Basic.verify_sound_data(sound_data))
 
     def test_verify_fails_if_no_track(self, _, __):

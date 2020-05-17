@@ -18,3 +18,6 @@ class Observer:
                     "with correct number of arguments. Please check "
                     "notifier to determine what is expected"
                 )
+
+    def reset(self):
+        self._observers = set()

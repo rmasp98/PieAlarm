@@ -3,7 +3,7 @@ import PyQt5.QtWidgets
 
 import ui
 import alarm.alarm
-import ui.widgets.qtext
+import ui.widgets.text
 import ui.widgets.layout
 
 
@@ -18,7 +18,7 @@ class NextAlarm(PyQt5.QtWidgets.QWidget):
         image.setPixmap(pixmap.scaledToWidth(35))
         layout.addWidget(image)
 
-        self._text = ui.widgets.qtext.QText()
+        self._text = ui.widgets.text.Text(size=ui.widgets.text.FontSize.MEDIUM)
         layout.addWidget(self._text)
         layout.addStretch()
 

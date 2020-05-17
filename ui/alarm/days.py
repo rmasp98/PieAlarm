@@ -1,21 +1,24 @@
 import PyQt5.QtWidgets
 import PyQt5.QtCore
 
-import ui.widgets.layout
-import ui.widgets.qtext
-import alarm.alarm
+from ui.widgets.layout import create_horizontal_layout
+from ui.widgets.text import Text
+from ui.widgets.text import FontSize
+from alarm.alarm import Alarm
 
 
 class DaysWidget(PyQt5.QtWidgets.QWidget):
     def __init__(self, days, clickable=False, parent=None):
         super(DaysWidget, self).__init__(parent)
-        layout = ui.widgets.layout.create_horizontal_layout(self)
+        layout = create_horizontal_layout(self)
 
         self._days = {}
-        for day in alarm.alarm.Alarm.Weekdays:
+        for day in Alarm.Weekdays:
             day_widget = DayLabel(day[:3], clickable)
             if day in days:
                 day_widget.set_active(True)
+            else:
+                day_widget.set_active(False)
             layout.addWidget(day_widget)
             self._days[day] = day_widget
 
@@ -27,9 +30,9 @@ class DaysWidget(PyQt5.QtWidgets.QWidget):
         return return_days
 
 
-class DayLabel(ui.widgets.qtext.QText):
+class DayLabel(Text):
     def __init__(self, text, clickable=False, parent=None):
-        super(DayLabel, self).__init__(text, parent)
+        super(DayLabel, self).__init__(text=text, size=FontSize.SMALL, parent=parent)
         self.setSizePolicy(
             PyQt5.QtWidgets.QSizePolicy.Preferred, PyQt5.QtWidgets.QSizePolicy.Preferred
         )

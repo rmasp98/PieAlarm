@@ -4,7 +4,7 @@ import PyQt5.QtCore
 
 import ui.controller
 import light.light
-import ui.home.clock
+import ui.widgets.time
 
 
 class ToolBar(PyQt5.QtWidgets.QToolBar):
@@ -12,34 +12,45 @@ class ToolBar(PyQt5.QtWidgets.QToolBar):
         super(ToolBar, self).__init__(parent)
         self.setIconSize(PyQt5.QtCore.QSize(50, 50))
         self.setMovable(False)
+        self._actions = {}
 
-        self.addAction(PyQt5.QtGui.QIcon("ui/icons/back.png"), "Back", _back_event)
+        self._actions["back"] = self.addAction(
+            PyQt5.QtGui.QIcon("ui/icons/back.png"), "Back", _back_event
+        )
         try:
             self._light_on = 0
             self._light = light.light.Light()
-            self.addAction(
+            self._actions["light"] = self.addAction(
                 PyQt5.QtGui.QIcon("ui/icons/light.png"), "Light", self._light_event
             )
         except:
             print("Could not create light button as no mote device found")
 
         self.addWidget(StretchWidget())
-        self._clock = self.addWidget(ui.home.clock.DigitalClock(30))
-
-        self.addWidget(StretchWidget())
-        self._save = self.addAction(PyQt5.QtGui.QIcon("ui/icons/save.png"), "Save")
-        self._delete = self.addAction(
-            PyQt5.QtGui.QIcon("ui/icons/delete.png"), "Delete"
+        self._clock = self.addWidget(
+            ui.widgets.time.Time(ui.widgets.text.FontSize.MEDIUM)
         )
 
-    def enable_edit(self, enable, save_event=None, delete_event=None):
-        self._save.setVisible(enable)
-        if save_event is not None:
-            self._save.triggered.connect(save_event)
+        self.addWidget(StretchWidget())
+        self._actions["save"] = self.addAction(
+            PyQt5.QtGui.QIcon("ui/icons/save.png"), "Save"
+        )
+        self._actions["delete"] = self.addAction(
+            PyQt5.QtGui.QIcon("ui/icons/delete.png"), "Delete"
+        )
+        self._actions["settings"] = self.addAction(
+            PyQt5.QtGui.QIcon("ui/icons/settings.png"), "Settings", _settings_event
+        )
 
-        self._delete.setVisible(enable)
-        if delete_event is not None:
-            self._delete.triggered.connect(delete_event)
+    def enable_action(self, action, enable=True, event=None):
+        if action in self._actions:
+            self._actions[action].setVisible(enable)
+            if event is not None:
+                self._actions[action].triggered.connect(event)
+            elif action == "back":
+                self._actions[action].triggered.connect(_back_event)
+            elif action == "light":
+                self._actions[action].triggered.connect(self._light_event)
 
     def enable_clock(self, enable):
         self._clock.setVisible(enable)
@@ -58,4 +69,8 @@ class StretchWidget(PyQt5.QtWidgets.QWidget):
 
 
 def _back_event():
-    ui.controller.UiController().back()
+    ui.Ctrl().back()
+
+
+def _settings_event():
+    ui.Ctrl().set_screen(ui.Screen.SETTINGS)
