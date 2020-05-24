@@ -7,6 +7,7 @@ from ui.alarm import view
 from ui.alarm import edit
 from ui.alarm import snooze
 from ui.settings import SettingsScreen
+from ui.player import player
 
 
 class UiController:
@@ -16,11 +17,12 @@ class UiController:
             self._screen = None
             self._last_screen = collections.deque(maxlen=10)
 
-        def init(self, app, window, alarm_manager, weather, settings):
+        def init(self, app, window, alarm_manager, weather, player, settings):
             self._app = app
             self._window = window
             self._alarm_manager = alarm_manager
             self._weather = weather
+            self._player = player
             self._settings = settings
             self._settings.emit_all()
 
@@ -43,6 +45,8 @@ class UiController:
                 new_screen = snooze.SnoozeScreen(self._alarm_manager)
             elif screen == ui.Screen.SETTINGS:
                 new_screen = SettingsScreen(self._settings)
+            elif screen == ui.Screen.PLAYER:
+                new_screen = player.PlayerScreen(self._player)
 
             if append_back:
                 self._last_screen.append(self._screen)

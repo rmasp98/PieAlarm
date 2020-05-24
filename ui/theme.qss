@@ -11,6 +11,10 @@ QWidget {
   /* border: 2px solid white; */
 }
 
+ControlButton {
+  background-color: white;
+}
+
 QLineEdit{
   color: black;
 }

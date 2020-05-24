@@ -31,5 +31,4 @@ TODO:
     - say "Snooze" to snooze alarm
     - say "Light on/off" to switch light on/off
   - Subscreens that allow further configuration/interface of application
-    - Obviously we will need a settings screen
     - Weather screen to elaborate on weather

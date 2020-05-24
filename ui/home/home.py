@@ -16,6 +16,7 @@ class HomeScreen(PyQt5.QtWidgets.QWidget):
     def __init__(self, alarm_manager, weather, parent=None):
         super(HomeScreen, self).__init__(parent)
         ui.Ctrl().enable_toolbar_action("back", False)
+        self._sleep = threading.Event()
 
         vert_layout = create_vertical_layout(self)
         vert_layout.addWidget(WeatherGroup(weather))
@@ -25,12 +26,13 @@ class HomeScreen(PyQt5.QtWidgets.QWidget):
         vert_layout.addWidget(NextAlarm(alarm_manager.get_next_alarm_time()))
 
     def mousePressEvent(self, _):
-        threading.Thread(target=_show_temp_toolbar).start()
+        threading.Thread(target=self._show_temp_toolbar).start()
 
-
-def _show_temp_toolbar():
-    ui.Ctrl().enable_toolbar_action("light", True)
-    ui.Ctrl().enable_toolbar_action("settings", True)
-    time.sleep(3)
-    ui.Ctrl().enable_toolbar_action("light", False)
-    ui.Ctrl().enable_toolbar_action("settings", False)
+    def _show_temp_toolbar(self):
+        self._sleep.set()
+        self._sleep.clear()
+        ui.Ctrl().enable_toolbar_action("light", True)
+        ui.Ctrl().enable_toolbar_action("settings", True)
+        if not self._sleep.wait(3):
+            ui.Ctrl().enable_toolbar_action("light", False)
+            ui.Ctrl().enable_toolbar_action("settings", False)

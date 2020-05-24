@@ -10,6 +10,7 @@ import alarm.manager
 import weather.weather
 import weather.darksky
 import settings.interface
+import sound.player
 
 import PyQt5.QtCore
 
@@ -30,17 +31,19 @@ if __name__ == "__main__":
     setup_logging()
     try:
         w = weather.weather.Weather(weather.darksky.Darksky())
-        w.start_api_poll()
+        # w.start_api_poll()
         s = settings.interface.Interface()
+        p = sound.player.Player()
         ui.Ctrl().init(
             PyQt5.QtWidgets.QApplication([os.sys.argv]),
             ui.window.Window(),
             alarm.manager.Manager(s),
             w,
+            p,
             s,
         )
-        # ui.Ctrl().exec(screen=ui.Screen.SETTINGS, theme="dark")
-        ui.Ctrl().exec(theme="dark")
+        ui.Ctrl().exec(screen=ui.Screen.PLAYER, theme="dark")
+        # ui.Ctrl().exec(theme="dark")
     except Exception as e:
         logging.exception("Exception in main()")
         print(e)

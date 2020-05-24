@@ -51,6 +51,24 @@ class Player:
         if self._player is not None:
             self._player.stop()
 
+    def next(self):
+        pass
+
+    def previous(self):
+        pass
+
+    def skip(self, time):
+        pass
+
+    def repeat(self):
+        pass
+
+    def shuffle(self):
+        pass
+
+    def add_playlist(self):
+        pass
+
     def _get_player(self, sound_data):
         if self.verify_sound_data(sound_data):
             if sound_data["type"] == "basic":

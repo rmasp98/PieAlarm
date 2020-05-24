@@ -8,6 +8,7 @@ class Screen(enum.Enum):
     EDIT = 2
     SNOOZE = 3
     SETTINGS = 4
+    PLAYER = 5
 
 
 from ui.controller import UiController as Ctrl
